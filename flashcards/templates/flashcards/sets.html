@@ -1,0 +1,15 @@
+{% extends "flashcards/layout.html" %}
+
+{% block body %}
+
+    {% for set in sets %}
+    <div class="existing-set-div">
+        <strong>{{ set.name }}</strong>
+        <ul>
+            <li>{{ set.description }}</li>
+            <li>Created: {{ set.timestamp }}</li>
+        </ul>
+    </div>
+    {% endfor %}
+
+{% endblock %}

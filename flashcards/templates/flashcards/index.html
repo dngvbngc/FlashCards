@@ -1,0 +1,49 @@
+{% extends "flashcards/layout.html" %}
+
+{% block body %}
+    {% if message %}
+    <div class="alert alert-warning alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ message }}
+      </div>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <div class="container">
+        <h2>Make a New Set</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input class="form-control" name="set_name" placeholder="Name of set" type="text">
+            </div>
+            <div class="form-group">
+                <input class="form-control" name="set_description" placeholder="Description" type="text">
+            </div>
+            <div class="add-card-div">
+            </div>
+            <button class="btn btn-dark add-card-button">Add Card</button>
+            <button class="btn btn-dark" type="submit">Save</button>
+        </form>
+    </div>  
+    {% endif %}
+
+    <script>
+        const addCardsBtns = document.querySelectorAll('.add-card-button');
+        addCardsBtns.forEach((button) => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const cardForm = document.createElement("form");
+                cardForm.className = "card-form";
+                cardForm.innerHTML = `
+                    <div class="form-group">
+                        <input class="form-control" name="card_term" placeholder="Term" type="text">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" name="card_definition" placeholder="Definition" type="text">
+                    </div>
+                `;
+                button.parentElement.querySelector(".add-card-div").appendChild(cardForm);
+            })
+        })
+    </script>
+{% endblock %}

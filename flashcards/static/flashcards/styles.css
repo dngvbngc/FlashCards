@@ -1,0 +1,48 @@
+.body {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    min-height: 90vh;
+}
+
+main {
+    flex: 1;
+}
+
+nav {
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+}
+.navbar {
+    display: flex;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.navbar-nav {
+    text-align:right;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+h2 {
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
+form {
+    width: 50%;
+}
+
+.card-form {
+    width: 100%;
+}
+
+.form-footer {
+    margin-top: 20px;
+    color: grey;
+}
