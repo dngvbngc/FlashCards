@@ -1,0 +1,33 @@
+{% extends "flashcards/layout.html" %}
+
+{% block body %}
+    {% if message %}
+        <div class="alert alert-warning alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <div class="container">
+        <h2>{{ set.name }}</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="custom-file">
+                <input type="file" accept=".csv" class="custom-file-input" id="customFile" name="file">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+            </div>
+            <div>
+                <button class="btn btn-dark csv-submit-button" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.querySelector('#customFile').addEventListener('change', function(event) {
+            const input = event.target;
+            const fileName = input.files[0].name;
+            const label = input.nextElementSibling;
+            label.innerHTML = fileName;
+        })
+    </script>
+{% endblock %}

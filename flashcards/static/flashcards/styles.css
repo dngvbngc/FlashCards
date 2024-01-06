@@ -46,3 +46,27 @@ form {
     margin-top: 20px;
     color: grey;
 }
+
+.bg-custom {
+    background-color: #C1E1C1;
+}
+
+.nTerms-div {
+    margin-bottom: 10px;
+}
+
+.csv-button {
+    margin-left: 10px;
+}
+
+.save-form-button {
+    margin-right:10px;
+}
+
+.csv-submit-button {
+    margin-top: 10px;
+}
+
+.custom-file-label {
+    text-align: left;
+}

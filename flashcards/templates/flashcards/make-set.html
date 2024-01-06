@@ -1,0 +1,57 @@
+{% extends "flashcards/layout.html" %}
+
+{% block body %}
+    {% if message %}
+    <div class="alert alert-warning alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ message }}
+      </div>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <div class="container">
+        <h2>Make a New Set</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input class="form-control" name="set_name" placeholder="Name of set" type="text">
+            </div>
+            <div class="form-group">
+                <input class="form-control" name="set_description" placeholder="Description" type="text">
+            </div>
+            <input hidden id="nTerms" name="nTerms" value="0">
+            <div class="add-card-div">
+            </div>
+            <button class="btn btn-dark add-card-button">Add Card</button>
+            <button name="method" value="reg" class="btn btn-dark save-form-button">Save</button>
+            OR
+            <button name="method" value="csv" class="btn btn-dark csv-button">Save & Add Cards via CSV file</button>
+        </form>
+    </div>  
+    {% endif %}
+
+    <script>
+        const nTermsInput = document.querySelector('#nTerms');
+
+        const addCardsBtns = document.querySelectorAll('.add-card-button');
+        addCardsBtns.forEach((button) => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const nTerms = parseInt(nTermsInput.value);
+                const cardForm = document.createElement("div");
+                cardForm.className = "card-form";
+                cardForm.innerHTML = `
+                    <div class="form-group">
+                        <input class="form-control" name="card_${nTerms}_term" placeholder="Term ${nTerms + 1}" type="text">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" name="card_${nTerms}_definition" placeholder="Definition" type="text">
+                    </div>
+                `;
+                nTermsInput.value = nTerms + 1;
+                button.parentElement.querySelector(".add-card-div").appendChild(cardForm);
+            })
+        })
+
+    </script>
+{% endblock %}

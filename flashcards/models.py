@@ -12,6 +12,6 @@ class Set(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class Card(models.Model):
-    set = models.ForeignKey("User", on_delete=models.CASCADE, related_name="cards")
+    set = models.ForeignKey("Set", on_delete=models.CASCADE, related_name="cards")
     term = models.CharField(max_length=255)
-    definition = models.TextField
+    definition = models.TextField()
