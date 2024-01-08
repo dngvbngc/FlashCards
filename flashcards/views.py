@@ -6,6 +6,10 @@ from django.urls import reverse
 
 from .models import User, Set, Card
 
+import csv
+import pandas as pd
+import io
+
 def index(request):
     return render(request, "flashcards/index.html")
 
@@ -52,16 +56,64 @@ def make_set(request):
 def add_cards_csv(request, set_id):
     set = Set.objects.filter(pk=set_id).first()
     message = None
+
     if request.method == "POST":
-        file = request.POST["file"]
+        file = request.FILES.get("file")
         if file:
-            message = "One file detected."
+            file_name = file.name
+            # Handle CSV file
+            if file_name.endswith('.csv'):
+                file = file.read().decode('utf-8')
+                csv_reader = csv.reader(file.splitlines(), delimiter=',')
+                for row in csv_reader:
+                    if len(row) != 2:
+                        message = "2 columns needed for each row. Only {l} row(s) detected. Please re-format your file and try again".format(l=len(row))
+                        return render(request, "flashcards/add-cards-csv.html", {
+                            "set": set,
+                            "message": message
+                        })
+                    term, definition = row[0], row[1]
+                    if term and definition:
+                        new_card = Card(
+                            set=set,
+                            term=term,
+                            definition=definition
+                        )
+                        new_card.save()
+                return HttpResponseRedirect(reverse("sets"))
+            
+            elif file_name.endswith('.xlsx') or file_name.endswith('.xls'):
+            # Handle Excel file
+                if file_name.endswith('.xlsx'):
+                    df = pd.read_excel(file, engine='openpyxl')
+                else:
+                    df = pd.read_excel(file, engine='xlrd')
+                if 'Term' in df.columns and 'Definition' in df.columns:
+                    for index, row in df.iterrows():
+                        # The excel file must have two columns name Term and Definition
+                        term, definition = row['Term'], row['Definition']
+                        if term and definition:
+                            new_card = Card(
+                                set=set,
+                                term=term,
+                                definition=definition
+                            )
+                            new_card.save()
+                    return HttpResponseRedirect(reverse("sets"))
+                else:
+                    message = "Excel file does not follow correct format."
+            
+            else:
+                message = "Unsupported file format."
+        
         else: 
             message = "No files detected."
+        
         return render(request, "flashcards/add-cards-csv.html", {
             "set": set,
             "message": message
         })
+    
     return render(request, "flashcards/add-cards-csv.html", {
         "set": set,
         "message": message

@@ -1,4 +1,5 @@
 {% extends "flashcards/layout.html" %}
+{% load static %}
 
 {% block body %}
     {% if message %}
@@ -9,12 +10,24 @@
     {% endif %}
 
     <div class="container">
-        <h2>{{ set.name }}</h2>
-        <form method="POST">
+        <h2>{{ set.name }}: Add cards via CSV</h2>
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="custom-file">
-                <input type="file" accept=".csv" class="custom-file-input" id="customFile" name="file">
-                <label class="custom-file-label" for="customFile">Choose file</label>
+                <input type="file" accept=".xlsx, .xls, .csv" class="custom-file-input" id="customFile" name="file">
+                <label class="custom-file-label left" for="customFile">Choose file</label>
+            </div>
+            <div class="form-footer left">
+                Your submission should include:
+                <ul>
+                    <li>One file only (.csv, .xls, .xlsx)</li>
+                    <li>CSV (.csv) file <strong>must not</strong> contain headers</li>
+                    <li>Excel (.xls/.xlsx) file <strong>must</strong> contain headers: "Term" and "Definition"</li>
+                    <li>Two columns total</li>
+                    <li>One column (left) for terms</li>
+                    <li>One column (right) for definitions</li>
+                </ul>
+                See sample <a href="{% static 'flashcards/sample.csv' %}" download>CSV</a> and <a href="{% static 'flashcards/sample.xlsx' %}" download>Excel</a> files.
             </div>
             <div>
                 <button class="btn btn-dark csv-submit-button" type="submit">Submit</button>
