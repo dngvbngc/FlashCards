@@ -177,3 +177,12 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "flashcards/register.html")
+
+def set(request, set_id):
+    try: 
+        set = Set.objects.get(pk=set_id)
+        return render(request, "flashcards/set.html", {
+            "set": set
+        })
+    except Exception:
+        return HttpResponse("Invalid set ID.")

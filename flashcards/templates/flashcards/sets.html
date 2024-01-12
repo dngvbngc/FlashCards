@@ -2,17 +2,34 @@
 
 {% block body %}
 
-    {% for set in sets %}
-    <div class="existing-set-div">
-        <strong>{{ set.name }}</strong>
-        <ul>
-            <li>{{ set.description }}</li>
-            <li>Created: {{ set.timestamp }}</li>
-            {% for card in set.cards.all %}
-            <li> Term: {{ card.term }}, Definition: {{ card.definition }}</li>
-            {% endfor %}
-        </ul>
+<div class="center">
+    <h2>Your Sets</h2>
+    <div class="existing-sets-div">
+        {% for set in sets %}
+        <div class="existing-set-div" id="{{ set.id }}">
+            <div class="set-item set-title">{{ set.name }}</div>
+            <div class="set-item">
+                <ul>
+                    <li>{{ set.description }}</li>
+                    <li>{{ set.cards.all.count }} terms in this set</li>
+                    <li>Created {{ set.timestamp|date:"d-m-Y" }}</li>
+                </ul>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+</div>
+
+<script> 
+    const sets = document.querySelectorAll(".existing-set-div");
+    sets.forEach((set) => {
+        set.addEventListener('click', function() {
+            const set_id = parseInt(set.id);
+            document.location.href = `/view-set/${set_id}`;
+        })
+    })
+</script>
+
+
 
 {% endblock %}

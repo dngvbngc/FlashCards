@@ -1,0 +1,24 @@
+{% extends "flashcards/layout.html" %}
+
+{% block body %}
+
+<div class="center">
+    <h2>{{ set.name }}</h2>
+    <div>{{ set.description }}</div>
+    <div>{{ set.cards.all.count }} card(s) in this set</div>
+    <div>Created {{ set.timestamp }}</div>
+
+    <div class="existing-cards-div">
+        {% for card in set.cards.all %}
+        <div class="existing-card-div" id="{{ card.id }}">
+            <div>
+                <ul>
+                    <li class="card-title">{{ card.term }}</li>
+                    <li>{{ card.definition }}</li>
+                </ul>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

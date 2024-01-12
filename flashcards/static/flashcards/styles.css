@@ -70,3 +70,57 @@ form {
 .left {
     text-align: left;
 }
+
+.center {
+    text-align: center;
+}
+
+.center {
+    text-align: center;
+}
+
+.existing-sets-div, .existing-cards-div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-left: 15%;
+    margin-top: 30px;
+}
+
+.existing-set-div, .existing-card-div {
+    border: 2px solid #C1E1C1;
+    border-radius: 10px;
+    padding: 10px;
+    width: 300px; 
+    background-color: #f8f8f8; 
+    font-family: 'Courier New', Courier, monospace;
+    transition: transform 0.3s ease-in-out;
+}
+
+.existing-set-div:hover, .existing-card-div:hover {
+    transform: scale(1.05); /* Increase the size on hover */
+}
+
+.set-item {
+    margin-bottom: 10px;
+}
+
+.set-title, .card-title {
+    font-weight: bold;
+    font-size: large;
+    margin-top: 15px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding-right: 20px;
+    padding-left: 20px; /* Adjust the padding as needed */
+    list-style-type: none;
+}
+
