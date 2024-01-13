@@ -16,7 +16,7 @@ import io
 def index(request):
     return render(request, "flashcards/index.html")
 
-def make_set(request):
+def create(request):
     message = None
     if request.method == "POST":
         set_name = request.POST["set_name"]
@@ -47,12 +47,12 @@ def make_set(request):
             if request.POST["method"] == "csv":
                 return HttpResponseRedirect(reverse('add-cards-csv', args=(new_set.pk,)))
             
-            # Redirect user to sets page
-            return HttpResponseRedirect(reverse("sets"))
+            # Redirect user to collection page
+            return HttpResponseRedirect(reverse("collection"))
         else:
             message = "Please add a name for your new set."
 
-    return render(request, "flashcards/make-set.html", 
+    return render(request, "flashcards/create.html", 
                   {"message": message}
                   )
 
@@ -83,7 +83,7 @@ def add_cards_csv(request, set_id):
                             definition=definition
                         )
                         new_card.save()
-                return HttpResponseRedirect(reverse("sets"))
+                return HttpResponseRedirect(reverse("collection"))
             
             elif file_name.endswith('.xlsx') or file_name.endswith('.xls'):
             # Handle Excel file
@@ -102,7 +102,7 @@ def add_cards_csv(request, set_id):
                                 definition=definition
                             )
                             new_card.save()
-                    return HttpResponseRedirect(reverse("sets"))
+                    return HttpResponseRedirect(reverse("collection"))
                 else:
                     message = "Excel file does not follow correct format."
             
@@ -122,12 +122,12 @@ def add_cards_csv(request, set_id):
         "message": message
     })
 
-def sets(request):
+def collection(request):
     if request.user.is_authenticated:
         user = request.user
         sets = user.sets.all()
         added = user.added.all()
-        return render(request, "flashcards/sets.html", {
+        return render(request, "flashcards/collection.html", {
             "sets": sets,
             "added": added
         })
@@ -162,10 +162,15 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-
-        # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
+
+        if not username or not password:
+            return render(request, "flashcards/register.html", {
+                "message": "Please input a username and password."
+            })
+        
+        # Ensure password matches confirmation
         if password != confirmation:
             return render(request, "flashcards/register.html", {
                 "message": "Passwords must match."

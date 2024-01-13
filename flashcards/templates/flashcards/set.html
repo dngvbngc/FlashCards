@@ -13,28 +13,25 @@
         <h2>
             {{ set.name }}
             <button onclick="share()" class="btn btn-outline-info set-btn" id="share-btn" title="Copy link">Share</button>
-            {% if user_is_not_owner %}
-                <form method="post" class="btnform">
-                    {% csrf_token %}
-                    {% if user_has_not_added %} 
-                        <button name="action" value="add" type="submit" class="btn btn-outline-info set-btn" title="Add this set to your collection">Add</button>
-                    {% else %}
-                        <button name="action" value="unadd" type="submit" class="btn btn-outline-info set-btn" title="Remove this set from your collection">Remove</button>
-                    {% endif %}
-                </form>
-            {% else %}
-                <button class="btn btn-outline-info set-btn" id="edit-btn" title="Edit this set">Edit</button>
-                <button class="btn btn-outline-info set-btn" id="delete-btn" title="Delete this set">Delete</button>
+            {% if user.is_authenticated %}
+                {% if user_is_not_owner %}
+                    <form method="post" class="btnform">
+                        {% csrf_token %}
+                        {% if user_has_not_added %} 
+                            <button name="action" value="add" type="submit" class="btn btn-outline-info set-btn" title="Add this set to your collection">Add</button>
+                        {% else %}
+                            <button name="action" value="unadd" type="submit" class="btn btn-outline-info set-btn" title="Remove this set from your collection">Remove</button>
+                        {% endif %}
+                    </form>
+                {% else %}
+                    <button class="btn btn-outline-info set-btn" id="edit-btn" title="Edit this set">Edit</button>
+                    <button class="btn btn-outline-info set-btn" id="delete-btn" title="Delete this set">Delete</button>
+                {% endif %}
             {% endif %}
         </h2>
         <div>{{ set.description }}</div>
         <div>{{ set.cards.all.count }} card(s) in this set</div>
-
-        {% if user_is_not_owner %}
-            <div>Created by {{ set.owner }} on {{ set.timestamp }}</div>
-        {% else %}
-            <div>Created by you on {{ set.timestamp }}</div>
-        {% endif %}
+        <div>Created by {{ set.owner }} on {{ set.timestamp }}</div>
 
         <div class="existing-cards-div">
             {% for card in set.cards.all %}

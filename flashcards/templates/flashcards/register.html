@@ -3,11 +3,14 @@
 {% block body %}
 
     <div class="container">
-        <h2>Register</h2>
-
         {% if message %}
-            <div>{{ message }}</div>
+        <div class="alert alert-warning alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ message }}
+        </div>
         {% endif %}
+
+        <h2>Register</h2>
 
         <form action="{% url 'register' %}" method="post">
             {% csrf_token %}

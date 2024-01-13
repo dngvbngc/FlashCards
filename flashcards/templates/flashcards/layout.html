@@ -20,8 +20,8 @@
               <div class="navbar-nav">
                 {% if user.is_authenticated %}
                     <a class="nav-item nav-link" href="#"><strong>{{ user.username }}</strong></a>
-                    <a class="nav-item nav-link" href="{% url 'make-set' %}">Make New Set</a>
-                    <a class="nav-item nav-link" href="{% url 'sets' %}">Your Sets</a>
+                    <a class="nav-item nav-link" href="{% url 'create' %}">Create</a>
+                    <a class="nav-item nav-link" href="{% url 'collection' %}">Collection</a>
                     <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
                 {% else %}
                     <a class="nav-item nav-link" href="{% url 'login' %}">Log In</a>

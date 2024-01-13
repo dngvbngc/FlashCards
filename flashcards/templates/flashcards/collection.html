@@ -17,13 +17,13 @@
             </div>
         </div>
         {% empty %}
-        <div class="empty-sets">
-            You have not made a study set. <a href="{% url 'make-set' %}">Create one.</a>
+        <div>
+            You have not made a study set. <a href="{% url 'create' %}">Create.</a>
         </div>
         {% endfor %}
     </div>
 
-    <h2>Added Sets</h2>
+    <h2 class="added-title">Added Sets</h2>
     <div class="existing-sets-div">
         {% for add in added %}
         <div class="existing-set-div" id="{{ add.set.id }}">

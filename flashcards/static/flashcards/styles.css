@@ -146,7 +146,6 @@ li {
     display: inline-block;
 }
 
-.empty-sets {
-    margin-bottom: 10px;
-    text-align: center;
+.added-title {
+    margin-top: 20px;
 }
