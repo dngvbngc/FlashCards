@@ -124,3 +124,8 @@ li {
     list-style-type: none;
 }
 
+.set-btn {
+    margin-left: 20px;
+    pointer-events: auto;
+}
+

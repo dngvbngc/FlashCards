@@ -3,7 +3,10 @@
 {% block body %}
 
 <div class="center">
-    <h2>{{ set.name }}</h2>
+    <h2>
+        {{ set.name }}
+        <button onclick="share()" class="btn btn-outline-info set-btn" id="share-btn" title="Copy link">Share</button>
+    </h2>
     <div>{{ set.description }}</div>
     <div>{{ set.cards.all.count }} card(s) in this set</div>
     <div>Created {{ set.timestamp }}</div>
@@ -21,4 +24,15 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+    const share = async () => {
+    try {
+        await navigator.clipboard.writeText(window.location.href.slice(7));
+        document.getElementById('share-btn').title = 'Link copied to clipboard';
+    } catch (err) {
+        alert("Failed to copy link");
+    }
+  }
+</script>
 {% endblock %}
