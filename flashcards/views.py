@@ -1,10 +1,13 @@
+import json
+
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from .models import User, Set, Card
+from .models import User, Set, Card, Add
 
 import csv
 import pandas as pd
@@ -121,9 +124,12 @@ def add_cards_csv(request, set_id):
 
 def sets(request):
     if request.user.is_authenticated:
-        sets = request.user.sets.all()
+        user = request.user
+        sets = user.sets.all()
+        added = user.added.all()
         return render(request, "flashcards/sets.html", {
-            "sets": sets
+            "sets": sets,
+            "added": added
         })
 
 
@@ -179,10 +185,45 @@ def register(request):
         return render(request, "flashcards/register.html")
 
 def set(request, set_id):
+    user = None
+    message = None
+    if request.user.is_authenticated:
+        user = request.user
+    else:
+        message = "Log in to add this set to your collection, or edit and delete if you are the owner."
+
     try: 
         set = Set.objects.get(pk=set_id)
-        return render(request, "flashcards/set.html", {
-            "set": set
-        })
-    except Exception:
+        user_is_not_owner = set.owner != user
+        user_has_not_added = len(Add.objects.filter(user=user, set=set)) == 0
+    except Set.DoesNotExist:
         return HttpResponse("Invalid set ID.")
+
+    if request.method == "POST":
+        action = request.POST["action"]
+        if action == "add":
+            if len(Add.objects.filter(user=user, set=set)) == 0:
+                new_add = Add(user=request.user,set=set)
+                new_add.save()
+                return HttpResponseRedirect(reverse('view-set', args=(set.pk,)))
+            else:
+                message = "Set already added to your collection."
+        elif action == "unadd":
+            if len(Add.objects.filter(user=user, set=set)) == 1:
+                Add.objects.filter(user=request.user, set=set).delete()
+                return HttpResponseRedirect(reverse('view-set', args=(set.pk,)))
+            else:
+                message = "Set has not been added to your collection."
+        return render(request, "flashcards/set.html", {
+            "set": set,
+            "user_is_not_owner": user_is_not_owner,
+            "user_has_not_added": user_has_not_added,
+            "message": message
+        })
+    
+    return render(request, "flashcards/set.html", {
+            "set": set,
+            "user_is_not_owner": user_is_not_owner,
+            "user_has_not_added": user_has_not_added,
+            "message": message
+        })

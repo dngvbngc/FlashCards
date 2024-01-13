@@ -15,3 +15,7 @@ class Card(models.Model):
     set = models.ForeignKey("Set", on_delete=models.CASCADE, related_name="cards")
     term = models.CharField(max_length=255)
     definition = models.TextField()
+
+class Add(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="added")
+    set = models.ForeignKey("Set", on_delete=models.CASCADE, related_name="added")

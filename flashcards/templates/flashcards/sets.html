@@ -16,6 +16,26 @@
                 </ul>
             </div>
         </div>
+        {% empty %}
+        <div class="empty-sets">
+            You have not made a study set. <a href="{% url 'make-set' %}">Create one.</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h2>Added Sets</h2>
+    <div class="existing-sets-div">
+        {% for add in added %}
+        <div class="existing-set-div" id="{{ add.set.id }}">
+            <div class="set-item set-title">{{ add.set.name }}</div>
+            <div class="set-item">
+                <ul>
+                    <li>{{ add.set.description }}</li>
+                    <li>{{ add.set.cards.all.count }} terms in this set</li>
+                    <li>Created {{ add.set.timestamp|date:"d-m-Y" }}</li>
+                </ul>
+            </div>
+        </div>
         {% endfor %}
     </div>
 </div>

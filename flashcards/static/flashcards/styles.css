@@ -35,7 +35,12 @@ h2 {
 }
 
 form {
-    width: 50%;
+    width: fit-content;
+    display: inline-block;
+}
+
+.btn-form {
+    width: auto;
 }
 
 .card-form {
@@ -125,7 +130,23 @@ li {
 }
 
 .set-btn {
-    margin-left: 20px;
     pointer-events: auto;
 }
 
+#share-btn {
+    margin-left: 15px;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.empty-sets {
+    margin-bottom: 10px;
+    text-align: center;
+}
