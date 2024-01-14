@@ -11,7 +11,11 @@
             <div class="set-item">
                 <ul>
                     <li>{{ set.description }}</li>
-                    <li>{{ set.cards.all.first.term }}: {{ set.cards.all.first.definition }}...</li>
+                    {% if set.cards.all %}
+                        <li>{{ set.cards.all.first.term }}: {{ set.cards.all.first.definition }}...</li>
+                    {% else %}
+                        <li>No cards yet</li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -30,7 +34,11 @@
             <div class="set-item">
                 <ul>
                     <li>{{ add.set.description }}</li>
-                    <li>{{ add.set.cards.all.first.term }}: {{ add.set.cards.all.first.definition }}...</li>
+                    {% if add.set.cards.all %}
+                        <li>{{ add.set.cards.all.first.term }}: {{ add.set.cards.all.first.definition }}...</li>
+                    {% else %}
+                        <li>No cards yet</li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

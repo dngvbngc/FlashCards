@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from .models import User, Set, Card, Add
 
@@ -199,6 +200,13 @@ def set(request, set_id):
 
     try: 
         set = Set.objects.get(pk=set_id)
+
+        # For one card view
+        cards = set.cards.all()
+        paginator = Paginator(cards, 1)  # Show 1 contacts per page.
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
         user_is_not_owner = set.owner != user
         user_has_not_added = len(Add.objects.filter(user=user, set=set)) == 0
     except Set.DoesNotExist:
@@ -226,12 +234,14 @@ def set(request, set_id):
             "set": set,
             "user_is_not_owner": user_is_not_owner,
             "user_has_not_added": user_has_not_added,
-            "message": message
+            "message": message,
+            "page_obj": page_obj
         })
     
     return render(request, "flashcards/set.html", {
             "set": set,
             "user_is_not_owner": user_is_not_owner,
             "user_has_not_added": user_has_not_added,
-            "message": message
+            "message": message,
+            "page_obj": page_obj
         })

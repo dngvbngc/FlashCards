@@ -35,9 +35,12 @@ h2 {
 }
 
 form {
-    width: fit-content;
+    width:fit-content;
+    min-width: 40vw;
     display: inline-block;
 }
+
+form
 
 .card-form {
     width: 100%;
@@ -91,12 +94,34 @@ form {
     padding: 5px;
     width: 60vw; 
     background-color: #f8f8f8; 
-    font-family: 'Courier New', Courier, monospace;
     transition: transform 0.3s ease-in-out;
 }
 
 .existing-set-div:hover, .existing-card-div:hover {
     transform: scale(1.05); /* Increase the size on hover */
+}
+
+.existing-onecard-div {
+    min-height:50vh;
+    border: 2px solid #C1E1C1;
+    border-radius: 10px;
+    margin: 10px;
+    min-width: 60vw;
+    padding-left: 5vw; 
+    padding-right: 5vw; 
+    background-color: #f8f8f8; 
+    transition: transform 0.3s ease-in-out;
+    margin: auto;
+    font-size: 40px;
+}
+
+.onecard-item {
+    margin-bottom: 10vh;
+}
+
+.onecard-title {
+    font-weight: bold;
+    margin-top: 10vh;
 }
 
 .set-item {
@@ -203,7 +228,7 @@ li {
     color: #fff;
     text-align: center;
     border-radius: 6px;
-    padding: 8px 0;
+    padding: 8px;
     position: absolute;
     z-index: 1;
     top: 125%;
@@ -245,6 +270,32 @@ li {
     padding: 10px;
 }
 
-.set-actions > button {
+.set-actions > button, #add, #unadd {
     margin-top: 10px;
+}
+
+.pagination {
+    display: inline-block;
+  }
+  
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 10px 0px;
+}
+
+.pagination a.active {
+    background-color: #C1E1C1;
+}
+
+.pagination a.inactive {
+    background-color: #efeeee;
+}
+
+.pagination a:hover:not(.inactive):not(.active) {
+    background-color: #ddd;
 }

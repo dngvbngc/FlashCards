@@ -37,23 +37,27 @@
                 View
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <button id="all-cards-view-btn" class="dropdown-item">All Cards</button>
                 <button id="one-card-view-btn" class="dropdown-item">Individual Cards</button>
+                <button id="all-cards-view-btn" class="dropdown-item">All Cards</button>
             </div>
             <button class="btn btn-outline-info popup" onclick="showDetails()">Details
-                <span class="popuptext" id="myPopup">
+                <span class="popuptext" id="detailsPopup">
                     {{ set.cards.all.count }} card(s) created by {{ set.owner }} on {{ set.timestamp }}
                 </span>
             </button>
-            <button onclick="share()" class="btn btn-outline-info set-btn" id="share-btn" title="Copy link">Share</button>
+            <button onclick="share()" class="btn btn-outline-info popup">Share
+                <span class="popuptext" id="copyPopup">
+                    Link copied to clipboard!
+                </span>
+            </button>
             {% if user.is_authenticated %}
                 {% if user_is_not_owner %}
                     <form method="post">
                         {% csrf_token %}
                         {% if user_has_not_added %} 
-                            <button name="action" value="add" type="submit" class="btn btn-outline-info set-btn" title="Add this set to your collection">Add</button>
+                            <button name="action" value="add" type="submit" class="btn btn-outline-info set-btn" title="Add this set to your collection" id="add">Add</button>
                         {% else %}
-                            <button name="action" value="unadd" type="submit" class="btn btn-outline-info set-btn" title="Remove this set from your collection">Remove</button>
+                            <button name="action" value="unadd" type="submit" class="btn btn-outline-info set-btn" title="Remove this set from your collection" id="unadd">Remove</button>
                         {% endif %}
                     </form>
                 {% else %}
@@ -63,7 +67,47 @@
             {% endif %}
         </div>
 
-        <div class="existing-cards-div" id="all-cards-view">
+        <!-- Default view: -->
+        <div class="existing-cards-div" id="one-card-view">
+            {% if page_obj %}
+                {% for card in page_obj %}
+                <div class="existing-onecard-div" id="{{ card.pk }}">
+                    <div class="onecard-item onecard-title">{{ card.term }}</div>
+                    <div class="oncard-item">
+                        <ul>
+                            <li>{{ card.definition }}</li>
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div>No cards yet.</div>
+            {% endif %}
+
+            {% if page_obj %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo;</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">&lsaquo;</a>
+                    {% else %}
+                        <a class="inactive">&laquo;</a>
+                        <a class="inactive">&lsaquo;</a>
+                    {% endif %}
+                        <a class="active">{{ page_obj.number }}</a>
+                        <a class="inactive">{{ page_obj.paginator.num_pages }}</a>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">&rsaquo;</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+                    {% else %}
+                        <a class="inactive">&rsaquo;</a>
+                        <a class="inactive">&raquo;</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- All Cards View: -->
+        <div class="existing-cards-div" id="all-cards-view" style="display:none">
             {% for card in set.cards.all %}
             <div class="existing-card-div" id="{{ card.pk }}">
                 <div class="set-item set-title">{{ card.term }}</div>
@@ -75,50 +119,60 @@
             </div>
             {% endfor %}
         </div>
+    </div>
 
-        <div class="existing-cards-div" id="one-card-view" style="display:none">
-            <div class="existing-card-div" id="{{ card.pk }}">
-                <div class="set-item set-title">HELLO</div>
-                <div class="set-item">
-                    <ul>
-                        <li>ONE CARD</li>
-                    </ul>
-                </div>
+    <div class="container">
+        <!-- Edit View:  -->
+        {% if user_is_not_owner %}
+        {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="set_name">Set Name:</label>
+                <input class="form-control" name="set_name" type="text" value="{{ set.name }}">
             </div>
-        </div>
-
+            <div class="form-group">
+                <label for="set_name">Set Description:</label>
+                <input class="form-control" name="set_description" value="{{ set.description }}" type="text">
+            </div>
+            {% for card in set.cards.all %}
+            <label for="card_{{ card.pk }}_term">Card:</label>
+            <div class="form-group">
+                <input class="form-control" name="card_{{ card.pk }}_term" value="{{ card.term }}" type="text">
+            </div>
+            <div class="form-group">
+                <input class="form-control" name="card_{{ card.pk }}_definition" value="{{ card.definition }}" type="text">
+            </div>
+            {%  endfor %}
+            <div class="add-card-div">
+            </div>
+            <button class="btn btn-dark add-card-button">Add Card</button>
+            <button name="method" value="reg" class="btn btn-dark save-form-button">Save</button>
+        </form>
+        {% endif %}
     </div>
 
     <script>
         const share = async () => {
-        try {
-            await navigator.clipboard.writeText(window.location.href.slice(7));
-            document.getElementById('share-btn').title = 'Link copied to clipboard';
-        } catch (err) {
-            alert("Failed to copy link");
-        }
+            try {
+                await navigator.clipboard.writeText(window.location.href.slice(7));
+                const copyPopup = document.getElementById("copyPopup");
+                copyPopup.classList.toggle("show");
+            } catch (err) {
+                alert("Failed to copy link");
+            }
         }
 
-        // Get the modal
+        // Delete button & functionality
         var modal = document.getElementById("myModal");
-
-        // Get the button that opens the modal
         var btn = document.getElementById("delete-btn");
-
-        // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
-
-        // When the user clicks on the button, open the modal
         btn.onclick = function() {
             modal.style.display = "block";
         }
-
-        // When the user clicks on <span> (x), close the modal
         span.onclick = function() {
             modal.style.display = "none";
         }
-
-        // When the user click on No, close the modal
         const nobtn = document.querySelector(".no");
         if (nobtn) {
             nobtn.onclick = function(event) {
@@ -126,17 +180,16 @@
                 modal.style.display = "none";
             }
         }
-
-        // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = "none";
         }
         }
 
+        // Show set details
         function showDetails() {
-            var popup = document.getElementById("myPopup");
-            popup.classList.toggle("show");
+            const detailsPopup = document.getElementById("detailsPopup");
+            detailsPopup.classList.toggle("show");
         }
 
         const oneCardBtn = document.querySelector("#one-card-view-btn");
