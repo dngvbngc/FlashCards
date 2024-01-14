@@ -1,4 +1,5 @@
 {% extends "flashcards/layout.html" %}
+{% load static %}
 
 {% block body %}
 
@@ -9,13 +10,45 @@
         </div>
     {% endif %}
 
-    <div class="center">
-        <h2>
-            {{ set.name }}
+    {% if user_is_not_owner %}
+    {% else %}
+        <!-- Delete confirmation modal -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close right">&times;</span>
+                <p>Are you sure you want to delete this set?</p>
+                <small>This action cannot be undone.</small>
+                <div>
+                    <form method="post" class="modal-form">
+                        {% csrf_token %}
+                        <button name="action" value="delete" type="submit" class="btn btn-danger">Yes</button> 
+                        <button class="btn btn-dark no">No</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="container center">
+        <h3>{{ set.name }}</h3>
+        <div>{{ set.description }}</div>
+        <div class="set-actions">
+            <button class="btn btn-outline-info dropdown-toggle" type="button" id="view-mode-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                View
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <button id="all-cards-view-btn" class="dropdown-item">All Cards</button>
+                <button id="one-card-view-btn" class="dropdown-item">Individual Cards</button>
+            </div>
+            <button class="btn btn-outline-info popup" onclick="showDetails()">Details
+                <span class="popuptext" id="myPopup">
+                    {{ set.cards.all.count }} card(s) created by {{ set.owner }} on {{ set.timestamp }}
+                </span>
+            </button>
             <button onclick="share()" class="btn btn-outline-info set-btn" id="share-btn" title="Copy link">Share</button>
             {% if user.is_authenticated %}
                 {% if user_is_not_owner %}
-                    <form method="post" class="btnform">
+                    <form method="post">
                         {% csrf_token %}
                         {% if user_has_not_added %} 
                             <button name="action" value="add" type="submit" class="btn btn-outline-info set-btn" title="Add this set to your collection">Add</button>
@@ -28,23 +61,32 @@
                     <button class="btn btn-outline-info set-btn" id="delete-btn" title="Delete this set">Delete</button>
                 {% endif %}
             {% endif %}
-        </h2>
-        <div>{{ set.description }}</div>
-        <div>{{ set.cards.all.count }} card(s) in this set</div>
-        <div>Created by {{ set.owner }} on {{ set.timestamp }}</div>
+        </div>
 
-        <div class="existing-cards-div">
+        <div class="existing-cards-div" id="all-cards-view">
             {% for card in set.cards.all %}
-            <div class="existing-card-div" id="{{ card.id }}">
-                <div>
+            <div class="existing-card-div" id="{{ card.pk }}">
+                <div class="set-item set-title">{{ card.term }}</div>
+                <div class="set-item">
                     <ul>
-                        <li class="card-title">{{ card.term }}</li>
                         <li>{{ card.definition }}</li>
                     </ul>
                 </div>
             </div>
             {% endfor %}
         </div>
+
+        <div class="existing-cards-div" id="one-card-view" style="display:none">
+            <div class="existing-card-div" id="{{ card.pk }}">
+                <div class="set-item set-title">HELLO</div>
+                <div class="set-item">
+                    <ul>
+                        <li>ONE CARD</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -57,5 +99,60 @@
         }
         }
 
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("delete-btn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user click on No, close the modal
+        const nobtn = document.querySelector(".no");
+        if (nobtn) {
+            nobtn.onclick = function(event) {
+                event.preventDefault();
+                modal.style.display = "none";
+            }
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+        }
+
+        function showDetails() {
+            var popup = document.getElementById("myPopup");
+            popup.classList.toggle("show");
+        }
+
+        const oneCardBtn = document.querySelector("#one-card-view-btn");
+        if (oneCardBtn) {
+            oneCardBtn.onclick = function() {
+                document.querySelector("#all-cards-view").style.display = 'none';
+                document.querySelector("#one-card-view").style.display = 'block';
+            }
+        }
+
+        const allCardsBtn = document.querySelector('#all-cards-view-btn');
+        if (allCardsBtn) {
+            allCardsBtn.onclick = function() {
+                document.querySelector("#all-cards-view").style.display = 'block';
+                document.querySelector("#one-card-view").style.display = 'none';
+            }
+        }
     </script>
 {% endblock %}

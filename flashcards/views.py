@@ -219,6 +219,9 @@ def set(request, set_id):
                 return HttpResponseRedirect(reverse('view-set', args=(set.pk,)))
             else:
                 message = "Set has not been added to your collection."
+        elif action == "delete":
+            Set.objects.filter(owner=user, pk=set_id).delete()
+            return HttpResponseRedirect(reverse("collection"))
         return render(request, "flashcards/set.html", {
             "set": set,
             "user_is_not_owner": user_is_not_owner,

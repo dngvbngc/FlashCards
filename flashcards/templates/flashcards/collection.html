@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<div class="center">
+<div class="container center">
     <h2>Your Sets</h2>
     <div class="existing-sets-div">
         {% for set in sets %}
@@ -11,8 +11,7 @@
             <div class="set-item">
                 <ul>
                     <li>{{ set.description }}</li>
-                    <li>{{ set.cards.all.count }} terms in this set</li>
-                    <li>Created {{ set.timestamp|date:"d-m-Y" }}</li>
+                    <li>{{ set.cards.all.first.term }}: {{ set.cards.all.first.definition }}...</li>
                 </ul>
             </div>
         </div>
@@ -23,7 +22,7 @@
         {% endfor %}
     </div>
 
-    <h2 class="added-title">Added Sets</h2>
+    <h2 class="added-title">Added</h2>
     <div class="existing-sets-div">
         {% for add in added %}
         <div class="existing-set-div" id="{{ add.set.id }}">
@@ -31,8 +30,7 @@
             <div class="set-item">
                 <ul>
                     <li>{{ add.set.description }}</li>
-                    <li>{{ add.set.cards.all.count }} terms in this set</li>
-                    <li>Created {{ add.set.timestamp|date:"d-m-Y" }}</li>
+                    <li>{{ add.set.cards.all.first.term }}: {{ add.set.cards.all.first.definition }}...</li>
                 </ul>
             </div>
         </div>
