@@ -4,10 +4,12 @@
 {% block body %}
 
     {% if message %}
+    <div class="container">
         <div class="alert alert-warning alert-dismissible">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             {{ message }}
         </div>
+    <div class="container">
     {% endif %}
 
     {% if user_is_not_owner %}
@@ -30,22 +32,20 @@
     {% endif %}
 
     <div class="container center">
-        <h3>{{ set.name }}</h3>
-        <div>{{ set.description }}</div>
         <div class="set-actions">
-            <button class="btn btn-outline-info dropdown-toggle" type="button" id="view-mode-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-info dropdown-toggle" type="button" id="view-mode-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 View
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <button id="one-card-view-btn" class="dropdown-item">Individual Cards</button>
                 <button id="all-cards-view-btn" class="dropdown-item">All Cards</button>
             </div>
-            <button class="btn btn-outline-info popup" onclick="showDetails()">Details
+            <button class="btn btn-info popup" onclick="showDetails()">Details
                 <span class="popuptext" id="detailsPopup">
                     {{ set.cards.all.count }} card(s) created by {{ set.owner }} on {{ set.timestamp }}
                 </span>
             </button>
-            <button onclick="share()" class="btn btn-outline-info popup">Share
+            <button onclick="share()" class="btn btn-info popup">Share
                 <span class="popuptext" id="copyPopup">
                     Link copied to clipboard!
                 </span>
@@ -55,16 +55,21 @@
                     <form method="post">
                         {% csrf_token %}
                         {% if user_has_not_added %} 
-                            <button name="action" value="add" type="submit" class="btn btn-outline-info set-btn" title="Add this set to your collection" id="add">Add</button>
+                            <button name="action" value="add" type="submit" class="btn btn-info set-btn" title="Add this set to your collection" id="add">Add</button>
                         {% else %}
-                            <button name="action" value="unadd" type="submit" class="btn btn-outline-info set-btn" title="Remove this set from your collection" id="unadd">Remove</button>
+                            <button name="action" value="unadd" type="submit" class="btn btn-info set-btn" title="Remove this set from your collection" id="unadd">Remove</button>
                         {% endif %}
                     </form>
                 {% else %}
-                    <button class="btn btn-outline-info set-btn" id="edit-btn" title="Edit this set">Edit</button>
-                    <button class="btn btn-outline-info set-btn" id="delete-btn" title="Delete this set">Delete</button>
+                    <button onclick="edit()" class="btn btn-info set-btn" id="edit-btn" title="Edit this set">Edit</button>
+                    <button class="btn btn-info set-btn" id="delete-btn" title="Delete this set">Delete</button>
                 {% endif %}
             {% endif %}
+        </div>
+
+        <div class="set-banner">
+            <h3>{{ set.name }}</h3>
+            <div>{{ set.description }}</div>
         </div>
 
         <!-- Default view: -->
@@ -73,11 +78,7 @@
                 {% for card in page_obj %}
                 <div class="existing-onecard-div" id="{{ card.pk }}">
                     <div class="onecard-item onecard-title">{{ card.term }}</div>
-                    <div class="oncard-item">
-                        <ul>
-                            <li>{{ card.definition }}</li>
-                        </ul>
-                    </div>
+                    <div class="onecard-item">{{ card.definition }}</div>
                 </div>
                 {% endfor %}
             {% else %}
@@ -121,41 +122,52 @@
         </div>
     </div>
 
-    <div class="container">
+    {% if user_is_not_owner %}
+    {% else %}
         <!-- Edit View:  -->
-        {% if user_is_not_owner %}
-        {% else %}
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="set_name">Set Name:</label>
-                <input class="form-control" name="set_name" type="text" value="{{ set.name }}">
-            </div>
-            <div class="form-group">
-                <label for="set_name">Set Description:</label>
-                <input class="form-control" name="set_description" value="{{ set.description }}" type="text">
-            </div>
-            {% for card in set.cards.all %}
-            <label for="card_{{ card.pk }}_term">Card:</label>
-            <div class="form-group">
-                <input class="form-control" name="card_{{ card.pk }}_term" value="{{ card.term }}" type="text">
-            </div>
-            <div class="form-group">
-                <input class="form-control" name="card_{{ card.pk }}_definition" value="{{ card.definition }}" type="text">
-            </div>
-            {%  endfor %}
-            <div class="add-card-div">
-            </div>
-            <button class="btn btn-dark add-card-button">Add Card</button>
-            <button name="method" value="reg" class="btn btn-dark save-form-button">Save</button>
-        </form>
-        {% endif %}
-    </div>
+        <div class="container" id="edit-view" style="display:none">  
+            <form method="post">
+                {% csrf_token %}
+                <input hidden id="nTerms" name="nTerms" value="{{ set.cards.all.count }}">
+                <div class="form-group">
+                    <label for="set_name">Set Name:</label>
+                    <input class="form-control" name="set_name" type="text" value="{{ set.name }}">
+                </div>
+                <div class="form-group">
+                    <label for="set_name">Set Description:</label>
+                    <input class="form-control" name="set_description" value="{{ set.description }}" type="text">
+                </div>
+                <label>Card(s) in this set:</label>
+                {% for card in set.cards.all %}
+                <div class="form-group">
+                    <input class="form-control" name="old_card_{{ card.pk }}_term" value="{{ card.term }}" type="text">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" name="old_card_{{ card.pk }}_definition" value="{{ card.definition }}" type="text">
+                </div>
+                {%  endfor %}
+                <div class="add-card-div">
+                </div>
+                <div class="form-footer left">
+                    Instruction: 
+                    <ul>
+                        <li>Your edited set must contain at least a name.</li>
+                        <li>Leave blank the term and/or definition of any card to delete.</li>
+                    </ul>
+                </div>
+                <button class="btn btn-dark add-card-button">Add Card</button>
+                <button name="action" value="edit" class="btn btn-dark save-form-button">Save</button>
+            </form>
+        </div>
+    {% endif %}
 
     <script>
         const share = async () => {
             try {
-                await navigator.clipboard.writeText(window.location.href.slice(7));
+                const location = window.location.href.slice(7); // Get the URL without the protocol
+                // Remove the '?page' parameter if it exists
+                const url = location.split('?')[0];
+                await navigator.clipboard.writeText(url);
                 const copyPopup = document.getElementById("copyPopup");
                 copyPopup.classList.toggle("show");
             } catch (err) {
@@ -197,6 +209,7 @@
             oneCardBtn.onclick = function() {
                 document.querySelector("#all-cards-view").style.display = 'none';
                 document.querySelector("#one-card-view").style.display = 'block';
+                document.querySelector("#edit-view").style.display = 'none';
             }
         }
 
@@ -205,7 +218,37 @@
             allCardsBtn.onclick = function() {
                 document.querySelector("#all-cards-view").style.display = 'block';
                 document.querySelector("#one-card-view").style.display = 'none';
+                document.querySelector("#edit-view").style.display = 'none';
             }
         }
+
+        function edit() {
+            document.querySelector("#all-cards-view").style.display = 'none';
+            document.querySelector("#one-card-view").style.display = 'none';
+            document.querySelector("#edit-view").style.display = 'block';
+        }
+
+        // Add card functionality
+        const nTermsInput = document.querySelector('#nTerms');
+
+        const addCardsBtns = document.querySelectorAll('.add-card-button');
+        addCardsBtns.forEach((button) => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const nTerms = parseInt(nTermsInput.value);
+                const cardForm = document.createElement("div");
+                cardForm.className = "card-form";
+                cardForm.innerHTML = `
+                    <div class="form-group">
+                        <input class="form-control" name="card_${nTerms}_term" placeholder="Term ${nTerms + 1}" type="text">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" name="card_${nTerms}_definition" placeholder="Definition" type="text">
+                    </div>
+                `;
+                nTermsInput.value = nTerms + 1;
+                button.parentElement.querySelector(".add-card-div").appendChild(cardForm);
+            })
+        })
     </script>
 {% endblock %}

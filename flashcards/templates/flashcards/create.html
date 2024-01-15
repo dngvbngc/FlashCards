@@ -1,15 +1,14 @@
 {% extends "flashcards/layout.html" %}
 
 {% block body %}
-    {% if message %}
-    <div class="alert alert-warning alert-dismissible">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        {{ message }}
-      </div>
-    {% endif %}
-
     {% if user.is_authenticated %}
     <div class="container">
+        {% if message %}
+        <div class="alert alert-warning alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ message }}
+        </div>
+        {% endif %}
         <h2>Create a New Set</h2>
         <form method="post">
             {% csrf_token %}
@@ -21,6 +20,12 @@
             </div>
             <input hidden id="nTerms" name="nTerms" value="0">
             <div class="add-card-div">
+            </div>
+            <div class="form-footer left">Instruction: 
+                <ul>
+                    <li>Your new set must have at least a name.</li>
+                    <li>A card will only be saved if it has a term and a definition.</li>
+                </ul>
             </div>
             <button class="btn btn-dark add-card-button">Add Card</button>
             <button name="method" value="reg" class="btn btn-dark save-form-button">Save</button>

@@ -1,5 +1,57 @@
 {% extends "flashcards/layout.html" %}
 
 {% block body %}
-    TODO
+    <div class="container">
+        <h2>Welcome to <b>FlashCards!</b></h2>
+        <h3>Explore new study sets from our users:</h3>
+            {% if page_obj %}
+                {% for set in page_obj %}
+                <div class="existing-oneset-div" id="{{ set.pk }}">
+                    <div class="oneset-item oneset-title">{{ set.name }}</div>
+                    {% if set.cards.all %}
+                        <div class="oneset-item">
+                            {{ set.cards.all.first.term }}: {{ set.cards.all.first.definition }}...
+                        </div>  
+                    {% else %}
+                    <div class="oneset-item">
+                        No cards yet.
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div>No sets yet.</div>
+            {% endif %}
+
+            {% if page_obj %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo;</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">&lsaquo;</a>
+                    {% else %}
+                        <a class="inactive">&laquo;</a>
+                        <a class="inactive">&lsaquo;</a>
+                    {% endif %}
+                        <a class="active">{{ page_obj.number }}</a>
+                        <a class="inactive">{{ page_obj.paginator.num_pages }}</a>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">&rsaquo;</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+                    {% else %}
+                        <a class="inactive">&rsaquo;</a>
+                        <a class="inactive">&raquo;</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+    </div>
+
+    <script> 
+        const sets = document.querySelectorAll(".existing-oneset-div");
+        sets.forEach((set) => {
+            set.addEventListener('click', function() {
+                const set_id = parseInt(set.id);
+                document.location.href = `/view-set/${set_id}`;
+            })
+        })
+    </script>
 {% endblock %}

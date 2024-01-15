@@ -15,7 +15,13 @@ import pandas as pd
 import io
 
 def index(request):
-    return render(request, "flashcards/index.html")
+    new_sets = Set.objects.all().order_by('-timestamp')[:5]
+    paginator = Paginator(new_sets, 1)  # Show 1 set per page.
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, "flashcards/index.html", {
+        "page_obj": page_obj
+    })
 
 def create(request):
     message = None
@@ -230,6 +236,34 @@ def set(request, set_id):
         elif action == "delete":
             Set.objects.filter(owner=user, pk=set_id).delete()
             return HttpResponseRedirect(reverse("collection"))
+        elif action == "edit":
+            if request.POST["set_name"]:
+                set.name = request.POST["set_name"]
+                set.description = request.POST["set_description"]
+                set.save()
+                current_cards_count = set.cards.all().count()
+                current_cards = list(set.cards.all())
+                nTerms = int(request.POST["nTerms"])
+                for i in range(nTerms):
+                    if i < current_cards_count:
+                        current_card = current_cards[i]
+                        card_term = request.POST["old_card_{pk}_term".format(pk=current_card.pk)]
+                        card_definition = request.POST["old_card_{pk}_definition".format(pk=current_card.pk)]
+                        if card_term and card_definition:
+                            current_card.term = card_term
+                            current_card.definition = card_definition
+                            current_card.save()
+                        else:
+                            current_card.delete()
+                    else:
+                        card_term = request.POST["card_{i}_term".format(i=i)]
+                        card_definition = request.POST["card_{i}_definition".format(i=i)]
+                        if card_term and card_definition:
+                            new_card = Card(set=set, term=card_term, definition=card_definition)
+                            new_card.save()
+                return HttpResponseRedirect(reverse('view-set', args=(set.pk,)))
+            else:
+                message = "Edit invalid. Please input a name and description for your set."
         return render(request, "flashcards/set.html", {
             "set": set,
             "user_is_not_owner": user_is_not_owner,
@@ -245,3 +279,4 @@ def set(request, set_id):
             "message": message,
             "page_obj": page_obj
         })
+        

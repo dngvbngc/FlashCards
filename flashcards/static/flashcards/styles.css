@@ -1,8 +1,8 @@
 .body {
-    padding: 30px;
+    margin-top: 30px;
     display: flex;
     flex-direction: column;
-    min-height: 90vh;
+    min-height: 75vh;
 }
 
 main {
@@ -40,14 +40,12 @@ form {
     display: inline-block;
 }
 
-form
-
 .card-form {
     width: 100%;
 }
 
 .form-footer {
-    margin-top: 20px;
+    padding: 20px;
     color: grey;
 }
 
@@ -83,7 +81,7 @@ form
     text-align: right;
 }
 
-.existing-sets-div, .existing-cards-div {
+.existing-sets-div, .existing-cards-div, #edit-view {
     margin-top: 15px;
 }
 
@@ -97,31 +95,48 @@ form
     transition: transform 0.3s ease-in-out;
 }
 
-.existing-set-div:hover, .existing-card-div:hover {
+.existing-set-div:hover, .existing-card-div:hover, .existing-oneset-div:hover {
     transform: scale(1.05); /* Increase the size on hover */
 }
 
-.existing-onecard-div {
-    min-height:50vh;
+.existing-onecard-div, .existing-oneset-div {
     border: 2px solid #C1E1C1;
     border-radius: 10px;
-    margin: 10px;
     min-width: 60vw;
     padding-left: 5vw; 
     padding-right: 5vw; 
     background-color: #f8f8f8; 
     transition: transform 0.3s ease-in-out;
     margin: auto;
-    font-size: 40px;
+    @media screen and (min-height: 667px) {
+        font-size: 40px;
+        margin: 10px;
+        min-height:50vh;
+    }
+    @media screen and (max-height: 667px) {
+        font-size: 30px;
+        margin: 5px;
+        min-height:35vh;
+    }
 }
 
-.onecard-item {
-    margin-bottom: 10vh;
+.onecard-item, .oneset-item {
+    @media screen and (min-height: 667px) {
+        margin-bottom: 10vh;
+    }
+    @media screen and (max-height: 667px) {
+        margin-bottom: 5vh;
+    }
 }
 
-.onecard-title {
+.onecard-title, .oneset-title {
     font-weight: bold;
-    margin-top: 10vh;
+    @media screen and (min-height: 667px) {
+        margin-top: 12vh;
+    }
+    @media screen and (max-height: 667px) {
+        margin-top: 7vh;
+    }
 }
 
 .set-item {
@@ -206,9 +221,17 @@ li {
 }
 
 .set-actions {
-    all:unset;
-    float:left;
+    form {
+        all:unset;
+    }
+    button {
+        margin-top: 2px;
+    }
+    form {
+        margin-top: 2px;
+    }
 }
+
 /* Popup container - can be anything you want */
 .popup {
     position: relative;
@@ -266,14 +289,6 @@ li {
     to {opacity:1 ;}
 }
 
-.set-actions {
-    padding: 10px;
-}
-
-.set-actions > button, #add, #unadd {
-    margin-top: 10px;
-}
-
 .pagination {
     display: inline-block;
   }
@@ -298,4 +313,34 @@ li {
 
 .pagination a:hover:not(.inactive):not(.active) {
     background-color: #ddd;
+}
+
+.btn-info {
+    background-color: #C1E1C1;
+    border: none;
+    color: grey;
+}
+
+.set-banner {
+    margin-top: 20px;
+    @media screen and (min-height: 667px) {
+        h3 {
+            font-size: 50px;
+        }
+        div {
+            font-size: 20px;
+        }
+    }
+    @media screen and (max-height: 667px) {
+        h3 {
+            font-size: 35px;
+        }
+        div {
+            font-size: 20px;
+        }
+    }
+}
+
+.unset {
+    all: unset;
 }
