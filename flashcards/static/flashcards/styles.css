@@ -321,6 +321,10 @@ li {
     color: grey;
 }
 
+.finish-btn {
+    color: grey;
+}
+
 .set-banner {
     margin-top: 20px;
     @media screen and (min-height: 667px) {

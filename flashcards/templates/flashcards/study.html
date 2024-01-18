@@ -29,12 +29,12 @@
             {% if page_obj %}
                 {% for card in page_obj %}
                 <div class="existing-onecard-div" id="{{ card.pk }}">
-                    <div class="onecard-item onecard-title">{{ card.term }}</div>
+                    <div class="onecard-item onecard-title">{{ card.definition }}</div>
                     <form>
-                        <input id="hint" hidden value="{{ card.definition }}">
+                        <input id="hint" hidden value="{{ card.term }}">
                         <div class="form-group">
-                            <input id="answer" class="form-control" placeholder="Definition">
-                            <label for="answer" style="display:none" id="prompt">Type in the correct definition above.</label>
+                            <input id="answer" class="form-control" placeholder="Term">
+                            <label for="answer" style="display:none" id="prompt">Enter the correct definition above.</label>
                         </div>
                     </form>
                 </div>
@@ -91,7 +91,7 @@
 
     function resetTestPage() {
         answer.value = "";
-        prompt.innerHTML = "Type in the correct definition above.";
+        prompt.innerHTML = "Enter the correct definition above.";
         prompt.style.display = "none";
         if (!nextbtn.classList.contains('disabled-link')) {
                 nextbtn.classList.add('disabled-link');

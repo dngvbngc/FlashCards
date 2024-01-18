@@ -42,7 +42,7 @@
             </div>
             {% if user.is_authenticated %}
                 <a href="{% url 'study-set' set.id %}" type="button" class="btn btn-info set-btn">Study</a>
-                <button href="#" class="btn btn-info set-btn">Test</button>
+                <a href="{% url 'test-set' set.id %}" type="button" class="btn btn-info set-btn">Test</a>
             {% endif %}
             <button class="btn btn-info popup" onclick="showDetails()">Details
                 <span class="popuptext" id="detailsPopup">

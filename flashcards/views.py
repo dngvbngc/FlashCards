@@ -286,18 +286,9 @@ def study(request, set_id):
         return HttpResponseRedirect(reverse('error', args=(400,)))
     
     try:
-        set = Set.objects.get(pk=set_id)
-        cards = set.cards.all()
-        # Shuffle the cards
-        shuffled = [None] * len(cards)
-        index = -1
-        
-        for card in cards:
-            while index == -1 or shuffled[index] is not None:
-                index = random.randint(0, len(cards) - 1)
-            shuffled[index] = card
-
-        paginator = Paginator(shuffled, 1)  
+        set = Set.objects.get(pk=set_id) 
+        cards = set.cards.all() # Shuffled cards
+        paginator = Paginator(cards, 1)  
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
     except Set.DoesNotExist:
@@ -306,6 +297,23 @@ def study(request, set_id):
     return render(request, "flashcards/study.html", {
         "set": set,
         "page_obj": page_obj
+    })
+
+def test(request, set_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('error', args=(400,)))
+    
+    try:
+        set = Set.objects.get(pk=set_id) 
+        cards = list(set.cards.all()) 
+        # Shuffled cards
+        random.shuffle(cards)
+    except Set.DoesNotExist:
+        return HttpResponseRedirect(reverse('error', args=(404,)))
+    
+    return render(request, "flashcards/test.html", {
+        "set": set,
+        "cards": cards
     })
 
 def error(request, error_code):
