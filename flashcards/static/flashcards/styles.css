@@ -162,10 +162,6 @@ li {
     list-style-type: none;
 }
 
-.working-link {
-    pointer-events: auto;
-}
-
 .disabled-link {
     pointer-events: none;
 }

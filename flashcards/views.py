@@ -1,4 +1,5 @@
 import json
+import random
 
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -209,15 +210,15 @@ def set(request, set_id):
 
         # For one card view
         cards = set.cards.all()
-        paginator = Paginator(cards, 1)  # Show 1 contacts per page.
+        paginator = Paginator(cards, 1) 
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
 
         user_is_not_owner = set.owner != user
         user_has_not_added = len(Add.objects.filter(user=user, set=set)) == 0
     except Set.DoesNotExist:
-        return HttpResponse("Invalid set ID.")
-
+        return HttpResponseRedirect(reverse('error', args=(404,)))
+    
     if request.method == "POST":
         action = request.POST["action"]
         if action == "add":
@@ -281,15 +282,38 @@ def set(request, set_id):
         })
         
 def study(request, set_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('error', args=(400,)))
+    
     try:
         set = Set.objects.get(pk=set_id)
-        paginator = Paginator(set.cards.all(), 1)  # Show 1 contacts per page.
+        cards = set.cards.all()
+        # Shuffle the cards
+        shuffled = [None] * len(cards)
+        index = -1
+        
+        for card in cards:
+            while index == -1 or shuffled[index] is not None:
+                index = random.randint(0, len(cards) - 1)
+            shuffled[index] = card
+
+        paginator = Paginator(shuffled, 1)  
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
     except Set.DoesNotExist:
-        return HttpResponse("Invalid set ID.")
+        return HttpResponseRedirect(reverse('error', args=(404,)))
     
     return render(request, "flashcards/study.html", {
         "set": set,
         "page_obj": page_obj
+    })
+
+def error(request, error_code):
+    message = None
+    if error_code == 404:
+        message = "Invalid set ID."
+    if error_code == 400:
+        message = "This action require log in."
+    return render(request, "flashcards/error.html", {
+        "message": message
     })

@@ -2,73 +2,125 @@
 
 {% block body %}
 
+<!-- End study session confirmation modal -->
+<div id="endModal" class="modal">
+    <div class="modal-content">
+        <span class="close right">&times;</span>
+        <p>Are you sure you want to end this study session?</p>
+        <small>Your progress will not be saved.</small>
+        <div>
+            <form action="{% url 'view-set' set.id %}" class="modal-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Yes</button> 
+                <button class="btn btn-dark no">No</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="container center">
     {% if set.cards.all.count == 0 %}
-    <div class="alert alert-warning alert-dismissible">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        There are no terms in this set to study. <a href="{% url 'view-set' set.id %}"> Go Back </a>
-    </div>
-    {% endif %}
-
-    <div class="existing-cards-div" id="one-card-view">
-        {% if page_obj %}
-            {% for card in page_obj %}
-            <div class="existing-onecard-div" id="{{ card.pk }}">
-                <div class="onecard-item onecard-title">{{ card.term }}</div>
-                <form>
-                    <input id="hint" hidden value="{{ card.definition }}">
-                    <div class="form-group">
-                        <input id="answer" class="form-control" placeholder="Definition">
-                        <label for="answer" style="display:none" id="prompt">Type in the correct definition above.</label>
-                    </div>
-                </form>
-            </div>
-            {% endfor %}
-        {% endif %}
-
-        <div class="actions-bar">
-            <button class="btn btn-info set-btn" id="hint-btn">Don't Know?</button>
-            <button class="btn btn-info set-btn">Stop</button>
+        <div class="alert alert-warning alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            There are no terms in this set to study. <a href="{% url 'view-set' set.id %}"> Go Back </a>
         </div>
-
-        {% if page_obj %}
-            <div class="pagination">
-                    <a class="inactive">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</a>
+    {% else %}
+        <div class="existing-cards-div" id="one-card-view">
+            {% if page_obj %}
+                {% for card in page_obj %}
+                <div class="existing-onecard-div" id="{{ card.pk }}">
+                    <div class="onecard-item onecard-title">{{ card.term }}</div>
+                    <form>
+                        <input id="hint" hidden value="{{ card.definition }}">
+                        <div class="form-group">
+                            <input id="answer" class="form-control" placeholder="Definition">
+                            <label for="answer" style="display:none" id="prompt">Type in the correct definition above.</label>
+                        </div>
+                    </form>
+                </div>
+                {% endfor %}
+            {% endif %}
+            <div class="actions-bar">
+                <button class="btn btn-info set-btn" id="hint-btn">Don't Know?</button>
+                <button class="btn btn-info set-btn" id="end-btn">End</button>
+                <button disabled class="btn btn-info set-btn">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</button>
                 {% if page_obj.has_next %}
-                    <a class="inactive disabled-link" href="?page={{ page_obj.next_page_number }}" id="next-btn">&rsaquo;</a>
+                    <a class="btn btn-light set-btn disabled-link next-btn" href="?page={{ page_obj.next_page_number }}">&rsaquo;</a>
                 {% else %}
-                    <a class="inactive">Finish</a>
+                    <a class="btn btn-light set-btn disabled-link next-btn" href="{% url 'view-set' set.id %}">Finish</a>
                 {% endif %}
             </div>
-        {% endif %}
-    </div>
-
+        </div>
+    {% endif %}
 </div>
 
 <script>
     const hintbtn = document.querySelector('#hint-btn');
     const hint = document.querySelector("#hint").value;
+    const prompt = document.querySelector("#prompt");
+    const answer = document.querySelector("#answer");
+    const nextbtn = document.querySelector('.next-btn');
 
     if (hintbtn) {
         hintbtn.onclick = function() {
-            document.querySelector("#answer").placeholder = hint;
-            document.querySelector("#prompt").style.display = "block";
+            answer.value = "";
+            answer.placeholder = hint;
+            prompt.style.display = "block";
         }
     }
 
-    document.querySelector('#answer').onchange = function() {
-        answer = document.querySelector('#answer').value;
-        if (answer === hint) {
-            document.querySelector('#next-btn').classList.remove('inactive');
-            document.querySelector('#next-btn').classList.remove('disabled-link');
-            document.querySelector('#next-btn').classList.add('active');
-            document.querySelector('#next-btn').classList.add('working-link');
-            document.querySelector('#prompt').innerHTML = "Correct!";
-            document.querySelector('#prompt').style.display = "block";
+    answer.addEventListener('change', function() { 
+        if (answer.value === hint) {
+            nextbtn.classList.remove('disabled-link');
+            nextbtn.classList.remove('btn-light');
+            nextbtn.classList.add('btn-info');
+            nextbtn.addEventListener('click', resetTestPage);
+            prompt.innerHTML = "Correct!";
+            prompt.style.display = "block";
+        } else {
+            prompt.innerHTML = "Incorrect.";
+            prompt.style.display = "block";
+            if (!nextbtn.classList.contains('disabled-link')) {
+                nextbtn.classList.add('disabled-link');
+            }
+            nextbtn.classList.add('btn-light');
+            nextbtn.classList.remove('btn-info');
+            nextbtn.removeEventListener('click', resetTestPage);
         }
-        else {
+    })
+
+    function resetTestPage() {
+        answer.value = "";
+        prompt.innerHTML = "Type in the correct definition above.";
+        prompt.style.display = "none";
+        if (!nextbtn.classList.contains('disabled-link')) {
+                nextbtn.classList.add('disabled-link');
+            }
+        nextbtn.classList.add('btn-light');
+        nextbtn.classList.remove('btn-info');
+    }
+
+    // End session modal
+    var modal = document.getElementById("endModal");
+    var btn = document.getElementById("end-btn");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    const nobtn = document.querySelector(".no");
+    if (nobtn) {
+        nobtn.onclick = function(event) {
             event.preventDefault();
+            modal.style.display = "none";
         }
+    }
+    window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
     }
 </script>
 

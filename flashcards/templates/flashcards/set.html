@@ -15,7 +15,7 @@
     {% if user_is_not_owner %}
     {% else %}
         <!-- Delete confirmation modal -->
-        <div id="myModal" class="modal">
+        <div id="deleteModal" class="modal">
             <div class="modal-content">
                 <span class="close right">&times;</span>
                 <p>Are you sure you want to delete this set?</p>
@@ -180,7 +180,7 @@
         }
 
         // Delete button & functionality
-        var modal = document.getElementById("myModal");
+        var modal = document.getElementById("deleteModal");
         var btn = document.getElementById("delete-btn");
         var span = document.getElementsByClassName("close")[0];
         btn.onclick = function() {
