@@ -162,8 +162,12 @@ li {
     list-style-type: none;
 }
 
-.set-btn {
+.working-link {
     pointer-events: auto;
+}
+
+.disabled-link {
+    pointer-events: none;
 }
 
 #view-mode-btn {
@@ -220,7 +224,7 @@ li {
     margin: 4px;
 }
 
-.set-actions {
+.actions-bar {
     form {
         all:unset;
     }
@@ -343,4 +347,9 @@ li {
 
 .unset {
     all: unset;
+}
+
+#prompt {
+    font-size: 15px;
+    color: grey;
 }

@@ -1,0 +1,75 @@
+{% extends "flashcards/layout.html" %}
+
+{% block body %}
+
+<div class="container center">
+    {% if set.cards.all.count == 0 %}
+    <div class="alert alert-warning alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        There are no terms in this set to study. <a href="{% url 'view-set' set.id %}"> Go Back </a>
+    </div>
+    {% endif %}
+
+    <div class="existing-cards-div" id="one-card-view">
+        {% if page_obj %}
+            {% for card in page_obj %}
+            <div class="existing-onecard-div" id="{{ card.pk }}">
+                <div class="onecard-item onecard-title">{{ card.term }}</div>
+                <form>
+                    <input id="hint" hidden value="{{ card.definition }}">
+                    <div class="form-group">
+                        <input id="answer" class="form-control" placeholder="Definition">
+                        <label for="answer" style="display:none" id="prompt">Type in the correct definition above.</label>
+                    </div>
+                </form>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="actions-bar">
+            <button class="btn btn-info set-btn" id="hint-btn">Don't Know?</button>
+            <button class="btn btn-info set-btn">Stop</button>
+        </div>
+
+        {% if page_obj %}
+            <div class="pagination">
+                    <a class="inactive">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</a>
+                {% if page_obj.has_next %}
+                    <a class="inactive disabled-link" href="?page={{ page_obj.next_page_number }}" id="next-btn">&rsaquo;</a>
+                {% else %}
+                    <a class="inactive">Finish</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<script>
+    const hintbtn = document.querySelector('#hint-btn');
+    const hint = document.querySelector("#hint").value;
+
+    if (hintbtn) {
+        hintbtn.onclick = function() {
+            document.querySelector("#answer").placeholder = hint;
+            document.querySelector("#prompt").style.display = "block";
+        }
+    }
+
+    document.querySelector('#answer').onchange = function() {
+        answer = document.querySelector('#answer').value;
+        if (answer === hint) {
+            document.querySelector('#next-btn').classList.remove('inactive');
+            document.querySelector('#next-btn').classList.remove('disabled-link');
+            document.querySelector('#next-btn').classList.add('active');
+            document.querySelector('#next-btn').classList.add('working-link');
+            document.querySelector('#prompt').innerHTML = "Correct!";
+            document.querySelector('#prompt').style.display = "block";
+        }
+        else {
+            event.preventDefault();
+        }
+    }
+</script>
+
+{% endblock %}

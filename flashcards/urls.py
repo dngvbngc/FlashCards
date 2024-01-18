@@ -11,5 +11,6 @@ urlpatterns = [
     path("collection", views.collection, name="collection"),
     path("create", views.create, name="create"),
     path("add-cards-csv/<int:set_id>", views.add_cards_csv, name="add-cards-csv"),
-    path("view-set/<int:set_id>", views.set, name="view-set")
+    path("view-set/<int:set_id>", views.set, name="view-set"),
+    path("study-set/<int:set_id>", views.study, name="study-set")
 ]

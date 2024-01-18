@@ -32,14 +32,18 @@
     {% endif %}
 
     <div class="container center">
-        <div class="set-actions">
+        <div class="actions-bar">
             <button class="btn btn-info dropdown-toggle" type="button" id="view-mode-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 View
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <button id="one-card-view-btn" class="dropdown-item">Individual Cards</button>
-                <button id="all-cards-view-btn" class="dropdown-item">All Cards</button>
+                <button id="one-card-view-btn" class="dropdown-item" onclick="showOneCard()">Individual Cards</button>
+                <button id="all-cards-view-btn" class="dropdown-item" onclick="showAllCards()">All Cards</button>
             </div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'study-set' set.id %}" type="button" class="btn btn-info set-btn">Study</a>
+                <button href="#" class="btn btn-info set-btn">Test</button>
+            {% endif %}
             <button class="btn btn-info popup" onclick="showDetails()">Details
                 <span class="popuptext" id="detailsPopup">
                     {{ set.cards.all.count }} card(s) created by {{ set.owner }} on {{ set.timestamp }}
@@ -204,22 +208,17 @@
             detailsPopup.classList.toggle("show");
         }
 
-        const oneCardBtn = document.querySelector("#one-card-view-btn");
-        if (oneCardBtn) {
-            oneCardBtn.onclick = function() {
-                document.querySelector("#all-cards-view").style.display = 'none';
-                document.querySelector("#one-card-view").style.display = 'block';
-                document.querySelector("#edit-view").style.display = 'none';
-            }
+
+        function showOneCard() {
+            document.querySelector("#all-cards-view").style.display = 'none';
+            document.querySelector("#one-card-view").style.display = 'block';
+            document.querySelector("#edit-view").style.display = 'none';
         }
 
-        const allCardsBtn = document.querySelector('#all-cards-view-btn');
-        if (allCardsBtn) {
-            allCardsBtn.onclick = function() {
-                document.querySelector("#all-cards-view").style.display = 'block';
-                document.querySelector("#one-card-view").style.display = 'none';
-                document.querySelector("#edit-view").style.display = 'none';
-            }
+        function showAllCards() {
+            document.querySelector("#all-cards-view").style.display = 'block';
+            document.querySelector("#one-card-view").style.display = 'none';
+            document.querySelector("#edit-view").style.display = 'none';
         }
 
         function edit() {

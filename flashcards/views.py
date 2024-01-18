@@ -280,3 +280,16 @@ def set(request, set_id):
             "page_obj": page_obj
         })
         
+def study(request, set_id):
+    try:
+        set = Set.objects.get(pk=set_id)
+        paginator = Paginator(set.cards.all(), 1)  # Show 1 contacts per page.
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+    except Set.DoesNotExist:
+        return HttpResponse("Invalid set ID.")
+    
+    return render(request, "flashcards/study.html", {
+        "set": set,
+        "page_obj": page_obj
+    })
