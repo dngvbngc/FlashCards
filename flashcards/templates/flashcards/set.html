@@ -86,7 +86,7 @@
                 </div>
                 {% endfor %}
             {% else %}
-                <div>No cards yet.</div>
+                <div class="empty-field">No cards yet.</div>
             {% endif %}
 
             {% if page_obj %}
@@ -114,7 +114,7 @@
         <!-- All Cards View: -->
         <div class="existing-cards-div" id="all-cards-view" style="display:none">
             {% for card in set.cards.all %}
-            <div class="existing-card-div" id="{{ card.pk }}">
+            <div class="card-div existing">
                 <div class="set-item set-title">{{ card.term }}</div>
                 <div class="set-item">
                     <ul>

@@ -85,17 +85,31 @@ form {
     margin-top: 15px;
 }
 
-.existing-set-div, .existing-card-div {
-    border: 2px solid #C1E1C1;
+.card-div, .set-div {
     border-radius: 10px;
     margin: 10px;
     padding: 5px;
     width: 60vw; 
-    background-color: #f8f8f8; 
     transition: transform 0.3s ease-in-out;
 }
 
-.existing-set-div:hover, .existing-card-div:hover, .existing-oneset-div:hover {
+.existing {
+    border: 2px solid #C1E1C1;
+    background-color: #f8f8f8; 
+    
+}
+
+.wrong-answer {
+    border: 2px solid red;
+    background-color: pink; 
+}
+
+.right-answer {
+    border: 2px solid #C1E1C1;
+    background-color: #e6fada; 
+}
+
+.set-div:hover, .card-div:hover, .existing-oneset-div:hover {
     transform: scale(1.05); /* Increase the size on hover */
 }
 
@@ -352,4 +366,12 @@ li {
 #prompt {
     font-size: 15px;
     color: grey;
+}
+
+.result > h3 {
+    margin: 3vh;
+}
+
+.back-btn {
+    margin-left: 10px;
 }

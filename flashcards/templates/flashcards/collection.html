@@ -6,7 +6,7 @@
     <h2>Your Sets</h2>
     <div class="existing-sets-div">
         {% for set in sets %}
-        <div class="existing-set-div" id="{{ set.id }}">
+        <div class="set-div existing" id="{{ set.id }}">
             <div class="set-item set-title">{{ set.name }}</div>
             <div class="set-item">
                 <ul>
@@ -29,7 +29,7 @@
     <h2 class="added-title">Added</h2>
     <div class="existing-sets-div">
         {% for add in added %}
-        <div class="existing-set-div" id="{{ add.set.id }}">
+        <div class="set-div existing" id="{{ add.set.id }}">
             <div class="set-item set-title">{{ add.set.name }}</div>
             <div class="set-item">
                 <ul>
@@ -47,7 +47,7 @@
 </div>
 
 <script> 
-    const sets = document.querySelectorAll(".existing-set-div");
+    const sets = document.querySelectorAll(".set-div");
     sets.forEach((set) => {
         set.addEventListener('click', function() {
             const set_id = parseInt(set.id);

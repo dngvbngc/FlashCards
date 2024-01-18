@@ -29,10 +29,10 @@
             <form method="POST">
                 {% csrf_token %}
                 {% for card in cards %}
-                <div class="existing-onecard-div" id="{{ card.pk }}">
+                <div class="existing-onecard-div">
                     <div class="onecard-item onecard-title">{{ card.definition }}</div>
                     <div class="form-group">
-                        <input class="answer form-control" placeholder="Term">
+                        <input class="answer form-control" name="{{ card.pk }}" placeholder="Term">
                     </div>
                 </div>
                 {% endfor %}

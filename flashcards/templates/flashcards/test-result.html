@@ -1,0 +1,43 @@
+{% extends "flashcards/layout.html" %}
+
+{% block body %}
+
+    <div class="container center">
+        <h3>Congratulations on finishing the test on <b>{{ set.name }}</b>!</h3>
+        <h4>Your score: <b>{{ score|floatformat:1 }}%</b> <a class="btn btn-dark back-btn" href="{% url 'view-set' set.id %}">View Set</a></h4> 
+        
+
+        <div class="result">
+            <h3>Wrong answers:</h3>
+            
+            {% for card in wrong %}
+                <div class="card-div wrong-answer">
+                    <div class="set-item set-title">{{ card.term }}</div>
+                    <div class="set-item">
+                        <ul>
+                            <li>{{ card.definition }}</li>
+                        </ul>
+                    </div>
+                </div>
+            {% empty %}
+                <div>No wrong answers.</div>
+            {% endfor %}
+
+            <h3>Right answers:</h3>
+
+            {% for card in right %}
+            <div class="card-div right-answer">
+                <div class="set-item set-title">{{ card.term }}</div>
+                <div class="set-item">
+                    <ul>
+                        <li>{{ card.definition }}</li>
+                    </ul>
+                </div>
+            </div>
+            {% empty %}
+                <div>No correct answers.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

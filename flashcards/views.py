@@ -302,15 +302,33 @@ def study(request, set_id):
 def test(request, set_id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('error', args=(400,)))
-    
     try:
         set = Set.objects.get(pk=set_id) 
-        cards = list(set.cards.all()) 
-        # Shuffled cards
-        random.shuffle(cards)
+        cards = set.cards.all()
     except Set.DoesNotExist:
         return HttpResponseRedirect(reverse('error', args=(404,)))
-    
+     
+    if request.method == "POST":
+        score = 0
+        wrong = []
+        right = []
+        for card in cards:
+            answer = request.POST["{pk}".format(pk=card.pk)]
+            if answer == card.term:
+                right.append(card)
+                score += 1
+            else:
+                wrong.append(card)
+        score = score / len(cards) * 100
+        return render(request, "flashcards/test-result.html", {
+            "set": set,
+            "right": right,
+            "wrong": wrong,
+            "score": score
+        })
+
+    cards = list(cards) 
+    random.shuffle(cards) # Shuffle
     return render(request, "flashcards/test.html", {
         "set": set,
         "cards": cards
