@@ -46,7 +46,10 @@
             {% endif %}
             <button class="btn btn-info popup" onclick="showDetails()">Details
                 <span class="popuptext" id="detailsPopup">
-                    {{ set.cards.all.count }} card(s) created by {{ set.owner }} on {{ set.timestamp }}
+                    <ul>
+                        <li>Contains {{ set.cards.all.count }} card(s) total.</li>
+                        <li>Created by <a href="{% url 'user' set.owner %}"><strong>{{ set.owner }}</strong></a> on {{ set.timestamp }}.</li>
+                    </ul>
                 </span>
             </button>
             <button onclick="share()" class="btn btn-info popup">Share

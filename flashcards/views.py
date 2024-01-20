@@ -65,7 +65,10 @@ def create(request):
                   )
 
 def add_cards_csv(request, set_id):
-    set = Set.objects.filter(pk=set_id).first()
+    try: 
+        set = Set.objects.get(pk=set_id)
+    except Set.DoesNotExist:
+        return HttpResponseRedirect(reverse('error', args=(404,)))
     message = None
 
     if request.method == "POST":
@@ -337,9 +340,19 @@ def test(request, set_id):
 def error(request, error_code):
     message = None
     if error_code == 404:
-        message = "Invalid set ID."
+        message = "Page Not Found."
     if error_code == 400:
-        message = "This action require log in."
+        message = "Log In Required."
     return render(request, "flashcards/error.html", {
         "message": message
+    })
+
+def user(request, username):
+    try:
+        user = User.objects.get(username=username) 
+    except User.DoesNotExist:
+        return HttpResponseRedirect(reverse('error', args=(404,)))
+    
+    return render(request, "flashcards/user.html", {
+        "user": user
     })

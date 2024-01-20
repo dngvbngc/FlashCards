@@ -1,4 +1,5 @@
 {% extends "flashcards/layout.html" %}
+{% load static %}
 
 {% block body %}
     {% if user.is_authenticated %}
@@ -34,6 +35,8 @@
                 <button name="method" value="csv" class="btn btn-dark csv-button">Save & Add Cards via CSV file</button>
             </div>
         </form>
+    
+    <img src="{% static 'flashcards/resting-bear.svg' %}">
     </div>  
     {% endif %}
 

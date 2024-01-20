@@ -1,8 +1,10 @@
 {% extends "flashcards/layout.html" %}
+{% load static %}
 
 {% block body %}
 
     <div class="container center">
+        <img src="{% static 'flashcards/error-bear.png' %}">
         {{ message }}
     </div>
 

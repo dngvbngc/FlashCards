@@ -12,6 +12,7 @@
     <body>
         
           <nav class="navbar navbar-expand-sm navbar-light bg-custom">
+            <img id="logo" src="{% static 'flashcards/logo.png' %}" class="d-inline-block align-top" alt="">
             <a class="navbar-brand" href="{% url 'index' %}">FlashCards</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
@@ -19,9 +20,9 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
               <div class="navbar-nav">
                 {% if user.is_authenticated %}
-                    <a class="nav-item nav-link" href="#"><strong>{{ user.username }}</strong></a>
                     <a class="nav-item nav-link" href="{% url 'create' %}">Create</a>
                     <a class="nav-item nav-link" href="{% url 'collection' %}">Collection</a>
+                    <a class="nav-item nav-link" href="{% url 'user' user.username %}"><strong>{{ user.username }}</strong></a>
                     <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
                 {% else %}
                     <a class="nav-item nav-link" href="{% url 'login' %}">Log In</a>

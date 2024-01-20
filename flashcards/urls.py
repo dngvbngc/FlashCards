@@ -14,5 +14,6 @@ urlpatterns = [
     path("view-set/<int:set_id>", views.set, name="view-set"),
     path("study-set/<int:set_id>", views.study, name="study-set"),
     path("test-set/<int:set_id>", views.test, name="test-set"),
+    path("user/<str:username>", views.user, name="user"),
     path("error/<int:error_code>", views.error, name="error")
 ]

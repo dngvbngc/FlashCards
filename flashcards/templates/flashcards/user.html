@@ -1,0 +1,59 @@
+{% extends "flashcards/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<div class="user-profile center">
+    <div class="username-div">
+        <h2>{{ user.username }}</h2>
+        <img src="{% static 'flashcards/avatar-bear.svg' %}">
+        <div class="left">
+        <b>Dashboard:</b>
+            <ul>
+                <li>Created {{ user.sets.all.count}} study set(s).</li>
+                <li>Last active {{ user.last_login.date }}.</li>
+                <li>Joined {{ user.date_joined.date }}.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="study-sets-div">
+        <div class="existing-sets-div center">
+            {% for set in user.sets.all %}
+            <div class="set-div existing" id="{{ set.id }}">
+                <div class="set-item set-title">{{ set.name }}</div>
+                <div class="set-item">
+                    <ul>
+                        <li>{{ set.description }}</li>
+                        {% if set.cards.all %}
+                            <li>{{ set.cards.all.first.term }}: {{ set.cards.all.first.definition }}...</li>
+                        {% else %}
+                            <li>No cards yet</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            {% empty %}
+            <div>
+                No study sets. 
+                {% if user == request.user %}
+                    <a href="{% url 'create' %}">Create.</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+<script> 
+    const sets = document.querySelectorAll(".set-div");
+    sets.forEach((set) => {
+        set.addEventListener('click', function() {
+            const set_id = parseInt(set.id);
+            document.location.href = `/view-set/${set_id}`;
+        })
+    })
+</script>
+
+{% endblock %}

@@ -2,9 +2,16 @@
 {% load static %}
 
 {% block body %}
-    <div class="container">
-        <h2>Welcome to <b>FlashCards!</b></h2>
-        <h3>Explore new study sets from our users:</h3>
+
+<div class="page-profile">
+    <div class="bear-div">
+        <img src="{% static 'flashcards/hello-bear.svg' %}">
+        <h2>
+            Welcome to <b>FlashCards!</b>
+        </h2>
+    </div>
+    <div class="study-sets-div center">
+        <h2>Explore new study sets from our users:</h2>
             {% if page_obj %}
                 {% for set in page_obj %}
                 <div class="existing-oneset-div" id="{{ set.pk }}">
@@ -45,6 +52,7 @@
                 </div>
             {% endif %}
     </div>
+</div>
 
     <script> 
         const sets = document.querySelectorAll(".existing-oneset-div");

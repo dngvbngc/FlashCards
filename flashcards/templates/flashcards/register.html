@@ -1,4 +1,5 @@
 {% extends "flashcards/layout.html" %}
+{% load static %}
 
 {% block body %}
 
@@ -32,6 +33,8 @@
         <div class="form-footer">
             Already have an account? <a href="{% url 'login' %}">Log In.</a>
         </div>
+
+        <img src="{% static 'flashcards/sleeping-bear.svg' %}">
     </div>
 
 {% endblock %}

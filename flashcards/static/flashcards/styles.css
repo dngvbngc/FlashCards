@@ -5,6 +5,20 @@
     min-height: 75vh;
 }
 
+body {
+    background-color: #CBC3E3;
+}
+
+#logo {
+    margin-top: 0;
+    height: 35px;
+    width: 35px;
+    @media (min-width: 440px) {
+        margin-right: 10px;
+    }
+}
+
+
 main {
     flex: 1;
 }
@@ -45,12 +59,12 @@ form {
 }
 
 .form-footer {
-    padding: 20px;
+    padding: 10px;
     color: grey;
 }
 
 .bg-custom {
-    background-color: #C1E1C1;
+    background-color: #a2bffe;
 }
 
 .nTerms-div {
@@ -67,6 +81,11 @@ form {
 
 .csv-submit-button {
     margin-top: 10px;
+}
+
+img {
+    margin-top: 2vh;
+    width: 35vw;
 }
 
 .left {
@@ -261,7 +280,7 @@ li {
 .popup .popuptext {
     visibility: hidden;
     width: 200px;
-    background-color: #555;
+    background-color: #cfcece;
     color: #fff;
     text-align: center;
     border-radius: 6px;
@@ -269,7 +288,7 @@ li {
     position: absolute;
     z-index: 1;
     top: 125%;
-    left: 50%;
+    left: 30%;
     margin-left: -80px;
 }
 
@@ -317,12 +336,16 @@ li {
     margin: 10px 0px;
 }
 
+.pagination a {
+    background-color: #efeeee;
+}
+
 .pagination a.active {
     background-color: #C1E1C1;
 }
 
 .pagination a.inactive {
-    background-color: #efeeee;
+    background-color: transparent;
 }
 
 .pagination a:hover:not(.inactive):not(.active) {
@@ -374,4 +397,91 @@ li {
 
 .back-btn {
     margin-left: 10px;
+}
+
+@media (max-width: 800px) {
+    .user-profile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-left: 10vw;
+        margin-right: 10vw;
+    }
+
+    .username-div img {
+        display: none;
+    }
+}
+
+@media (min-width: 800px) {
+    .user-profile {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        padding-left: 5vw;
+        padding-right: 5vw;
+    }
+
+    .username-div {
+        img {
+            width: 20vw;
+            margin-bottom: 3vh;
+        }
+    
+        flex: 1;
+        padding-right: 20px; /* Adjust as needed for spacing */
+        margin-top: 10px;
+    }
+    
+    .study-sets-div {
+        flex: 2;
+    }
+    
+}
+
+@media (max-width: 800px) {
+    .page-profile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-left: 10vw;
+        margin-right: 10vw;
+    }
+
+    .bear-div {
+        display: none;
+    }
+}
+
+@media (min-width: 800px) {
+    .page-profile {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding-left: 5vw;
+        padding-right: 5vw;
+    }
+
+    .bear-div {
+        img {
+            width: 25vw;
+            margin-bottom: 3vh;
+        }
+
+        #name-logo {
+            height: 15vh;
+            display: inline;
+        }
+    
+        flex: 1;
+        padding-right: 20px; /* Adjust as needed for spacing */
+        margin-top: 10px;
+    }
+    
+    .study-sets-div {
+        flex: 2;
+    }
+    
 }
