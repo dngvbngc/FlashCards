@@ -45,10 +45,10 @@
                 <a href="{% url 'test-set' set.id %}" type="button" class="btn btn-info set-btn">Test</a>
             {% endif %}
             <button class="btn btn-info popup" onclick="showDetails()">Details
-                <span class="popuptext" id="detailsPopup">
+                <span class="popuptext left" id="detailsPopup">
                     <ul>
                         <li>Contains {{ set.cards.all.count }} card(s) total.</li>
-                        <li>Created by <a href="{% url 'user' set.owner %}"><strong>{{ set.owner }}</strong></a> on {{ set.timestamp }}.</li>
+                        <li>Created by <a class="user-link" href="{% url 'user' set.owner %}"><strong>{{ set.owner }}</strong></a> on {{ set.timestamp }}.</li>
                     </ul>
                 </span>
             </button>
@@ -169,18 +169,6 @@
     {% endif %}
 
     <script>
-        const share = async () => {
-            try {
-                const location = window.location.href.slice(7); // Get the URL without the protocol
-                // Remove the '?page' parameter if it exists
-                const url = location.split('?')[0];
-                await navigator.clipboard.writeText(url);
-                const copyPopup = document.getElementById("copyPopup");
-                copyPopup.classList.toggle("show");
-            } catch (err) {
-                alert("Failed to copy link");
-            }
-        }
 
         // Delete button & functionality
         var modal = document.getElementById("deleteModal");
@@ -210,7 +198,6 @@
             const detailsPopup = document.getElementById("detailsPopup");
             detailsPopup.classList.toggle("show");
         }
-
 
         function showOneCard() {
             document.querySelector("#all-cards-view").style.display = 'none';

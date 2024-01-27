@@ -349,10 +349,18 @@ def error(request, error_code):
 
 def user(request, username):
     try:
-        user = User.objects.get(username=username) 
+        user = request.user
+        user_displayed = User.objects.get(username=username) 
     except User.DoesNotExist:
         return HttpResponseRedirect(reverse('error', args=(404,)))
     
+    if request.method == "POST":
+        if request.POST["action"] == "delete":
+            if user == user_displayed:
+                user_displayed.delete()
+                HttpResponseRedirect(reverse("logout"))
+    
     return render(request, "flashcards/user.html", {
-        "user": user
+        "user": user,
+        "user_displayed": user_displayed
     })

@@ -3,23 +3,49 @@
 
 {% block body %}
 
+{% if user == request.user %}
+    <!-- Delete confirmation modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close right">&times;</span>
+            <p>Are you sure you want to delete your account?</p>
+            <small>This action cannot be undone.</small>
+            <div>
+                <form method="post" class="modal-form">
+                    {% csrf_token %}
+                    <button name="action" value="delete" type="submit" class="btn btn-danger">Yes</button> 
+                    <button class="btn btn-dark no">No</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
 <div class="user-profile center">
     <div class="username-div">
-        <h2>{{ user.username }}</h2>
+        <h2>{{ user_displayed.username }}</h2>
         <img src="{% static 'flashcards/avatar-bear.svg' %}">
         <div class="left">
         <b>Dashboard:</b>
             <ul>
-                <li>Created {{ user.sets.all.count}} study set(s).</li>
-                <li>Last active {{ user.last_login.date }}.</li>
-                <li>Joined {{ user.date_joined.date }}.</li>
+                <li>Created {{ user_displayed.sets.all.count}} study set(s).</li>
+                <li>Last active {{ user_displayed.last_login.date }}.</li>
+                <li>Joined {{ user_displayed.date_joined.date }}.</li>
             </ul>
         </div>
+        <button onclick="share()" class="btn btn-info popup">Share
+            <span class="popuptext" id="copyPopup">
+                Link copied to clipboard!
+            </span>
+        </button>
+        {% if user_displayed == user %}
+            <button class="btn btn-info set-btn" id="delete-user-btn" title="Delete account">Delete</button>
+        {% endif %}
     </div>
 
     <div class="study-sets-div">
         <div class="existing-sets-div center">
-            {% for set in user.sets.all %}
+            {% for set in user_displayed.sets.all %}
             <div class="set-div existing" id="{{ set.id }}">
                 <div class="set-item set-title">{{ set.name }}</div>
                 <div class="set-item">
@@ -36,7 +62,7 @@
             {% empty %}
             <div>
                 No study sets. 
-                {% if user == request.user %}
+                {% if user_displayed == user %}
                     <a href="{% url 'create' %}">Create.</a>
                 {% endif %}
             </div>
@@ -54,6 +80,29 @@
             document.location.href = `/view-set/${set_id}`;
         })
     })
+
+    // Delete button & functionality
+    var modal = document.getElementById("deleteModal");
+        var btn = document.getElementById("delete-user-btn");
+        var span = document.getElementsByClassName("close")[0];
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        const nobtn = document.querySelector(".no");
+        if (nobtn) {
+            nobtn.onclick = function(event) {
+                event.preventDefault();
+                modal.style.display = "none";
+            }
+        }
+        window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+        }
 </script>
 
 {% endblock %}

@@ -279,7 +279,7 @@ li {
 .popup .popuptext {
     visibility: hidden;
     width: 200px;
-    background-color: #cfcece;
+    background-color: #6c6b6b;
     color: #fff;
     text-align: center;
     border-radius: 6px;
@@ -482,5 +482,8 @@ li {
     .study-sets-div {
         flex: 2;
     }
-    
+}
+
+.user-link {
+    color: white;
 }
