@@ -25,6 +25,10 @@ def index(request):
     })
 
 def create(request):
+
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('error', args=(400,)))
+    
     message = None
     if request.method == "POST":
         set_name = request.POST["set_name"]
@@ -61,7 +65,7 @@ def create(request):
             message = "Please add a name for your new set."
 
     return render(request, "flashcards/create.html", 
-                  {"message": message}
+                  { "message": message }
                   )
 
 def add_cards_csv(request, set_id):
@@ -71,6 +75,9 @@ def add_cards_csv(request, set_id):
         return HttpResponseRedirect(reverse('error', args=(404,)))
     message = None
 
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('error', args=(400,)))
+    
     if request.user != set.owner:
         return HttpResponseRedirect(reverse('error', args=(300,)))
     
@@ -137,14 +144,16 @@ def add_cards_csv(request, set_id):
     })
 
 def collection(request):
-    if request.user.is_authenticated:
-        user = request.user
-        sets = user.sets.all()
-        added = user.added.all()
-        return render(request, "flashcards/collection.html", {
-            "sets": sets,
-            "added": added
-        })
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('error', args=(400,)))
+    
+    user = request.user
+    sets = user.sets.all()
+    added = user.added.all()
+    return render(request, "flashcards/collection.html", {
+        "sets": sets,
+        "added": added
+    })
 
 
 def login_view(request):
