@@ -54,13 +54,4 @@
     </div>
 </div>
 
-    <script> 
-        const sets = document.querySelectorAll(".existing-oneset-div");
-        sets.forEach((set) => {
-            set.addEventListener('click', function() {
-                const set_id = parseInt(set.id);
-                document.location.href = `/view-set/${set_id}`;
-            })
-        })
-    </script>
 {% endblock %}

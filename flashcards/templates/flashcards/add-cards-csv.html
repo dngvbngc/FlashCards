@@ -2,14 +2,15 @@
 {% load static %}
 
 {% block body %}
-    {% if message %}
-        <div class="alert alert-warning alert-dismissible">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            {{ message }}
-        </div>
-    {% endif %}
 
     <div class="container">
+        {% if message %}
+            <div class="alert alert-warning alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {{ message }}
+            </div>
+        {% endif %}
+
         <h2>{{ set.name }}: Add cards via CSV</h2>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
@@ -33,13 +34,5 @@
         </form>
         <img src="{% static 'flashcards/sleeping-bear.svg' %}">
     </div>
-
-    <script>
-        document.querySelector('#customFile').addEventListener('change', function(event) {
-            const input = event.target;
-            const fileName = input.files[0].name;
-            const label = input.nextElementSibling;
-            label.innerHTML = fileName;
-        })
-    </script>
+    
 {% endblock %}

@@ -3,7 +3,7 @@
 {% block body %}
 
 <!-- End study session confirmation modal -->
-<div id="endModal" class="modal">
+<div id="deleteModal" class="modal">
     <div class="modal-content">
         <span class="close right">&times;</span>
         <p>Are you sure you want to end this test?</p>
@@ -32,59 +32,18 @@
                 <div class="existing-onecard-div">
                     <div class="onecard-item onecard-title">{{ card.definition }}</div>
                     <div class="form-group">
-                        <input class="answer form-control" name="{{ card.pk }}" placeholder="Term">
+                        <input class="test-answer form-control" name="{{ card.pk }}" placeholder="Term">
                     </div>
                 </div>
                 {% endfor %}
 
                 <div class="actions-bar">
-                    <button class="btn btn-info set-btn" id="end-btn">End</button>
+                    <button class="btn btn-info set-btn" id="delete-btn">End</button>
                     <button class="btn btn-light set-btn disabled-link finish-btn">Finish</button>
                 </div>
             </form>
         </div>
     {% endif %}
 </div>
-
-<script>
-    const answers = document.querySelectorAll(".answer");
-    const finishbtn = document.querySelector('.finish-btn');
-
-    answers.forEach((answer) => {
-        answer.addEventListener('change', function() { 
-            finishbtn.classList.remove('disabled-link');
-            finishbtn.classList.remove('btn-light');
-            finishbtn.classList.add('btn-info');
-        })
-    })
-
-    // End session modal
-    var modal = document.getElementById("endModal");
-    var btn = document.getElementById("end-btn");
-    var span = document.getElementsByClassName("close")[0];
-
-    btn.addEventListener('click', function(event) {
-        event.preventDefault();
-    })
-
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-    const nobtn = document.querySelector(".no");
-    if (nobtn) {
-        nobtn.onclick = function(event) {
-            event.preventDefault();
-            modal.style.display = "none";
-        }
-    }
-    window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-    }
-</script>
 
 {% endblock %}

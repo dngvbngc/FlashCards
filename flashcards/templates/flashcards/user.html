@@ -39,7 +39,7 @@
             </span>
         </button>
         {% if user_displayed == user %}
-            <button class="btn btn-info set-btn" id="delete-user-btn" title="Delete account">Delete</button>
+            <button class="btn btn-info set-btn" id="delete-btn" title="Delete account">Delete</button>
         {% endif %}
     </div>
 
@@ -70,39 +70,5 @@
         </div>
     </div>
 </div>
-
-
-<script> 
-    const sets = document.querySelectorAll(".set-div");
-    sets.forEach((set) => {
-        set.addEventListener('click', function() {
-            const set_id = parseInt(set.id);
-            document.location.href = `/view-set/${set_id}`;
-        })
-    })
-
-    // Delete button & functionality
-    var modal = document.getElementById("deleteModal");
-        var btn = document.getElementById("delete-user-btn");
-        var span = document.getElementsByClassName("close")[0];
-        btn.onclick = function() {
-            modal.style.display = "block";
-        }
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-        const nobtn = document.querySelector(".no");
-        if (nobtn) {
-            nobtn.onclick = function(event) {
-                event.preventDefault();
-                modal.style.display = "none";
-            }
-        }
-        window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-        }
-</script>
 
 {% endblock %}

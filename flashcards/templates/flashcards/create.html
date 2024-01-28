@@ -39,29 +39,5 @@
     <img src="{% static 'flashcards/resting-bear.svg' %}">
     </div>  
     {% endif %}
-
-    <script>
-        const nTermsInput = document.querySelector('#nTerms');
-
-        const addCardsBtns = document.querySelectorAll('.add-card-button');
-        addCardsBtns.forEach((button) => {
-            button.addEventListener('click', function(event) {
-                event.preventDefault();
-                const nTerms = parseInt(nTermsInput.value);
-                const cardForm = document.createElement("div");
-                cardForm.className = "card-form";
-                cardForm.innerHTML = `
-                    <div class="form-group">
-                        <input class="form-control" name="card_${nTerms}_term" placeholder="Term ${nTerms + 1}" type="text">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" name="card_${nTerms}_definition" placeholder="Definition" type="text">
-                    </div>
-                `;
-                nTermsInput.value = nTerms + 1;
-                button.parentElement.querySelector(".add-card-div").appendChild(cardForm);
-            })
-        })
-
-    </script>
+    
 {% endblock %}

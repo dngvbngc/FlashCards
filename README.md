@@ -1,7 +1,7 @@
 # FlashCards-WebAPI
 
 ## Distinctiveness and Complexity: 
-This web application is my capstone submission for **CS50’s Web Programming with Python and JavaScript**. Built using the Django Web Framework, SQLite, and Bootstrap, this is a FlashCards application for learners of memory-intensive subjects such as foreign languages. 
+This web application is my capstone submission for **CS50’s Web Programming with Python and JavaScript**. Built using the **Django Web Framework**, **SQLite**, and **Bootstrap**, this is a FlashCards application for learners of memory-intensive subjects such as foreign languages. 
 
 The application includes these main features:
 
@@ -19,26 +19,35 @@ The application includes these main features:
 
 7. Viewing a user's profile: View the user's information, such as date of account creation, last log-in date, and all study sets this user has created.
 
-Other feature:
+Other funtionalities:
 - Copying the link to a set/user onto the clipboard to share with another user
 - Checking information of a set, such as number of cards and date of creation
 - Deleting a user's account
+
+8. Mobile-responsiveness: This application's user interface will change accross different devices' screen sizes for ease of use. Some images may not be shown on a smaller screen. 
 
 ## Important folders and files in this directory:
 
 `requirements.txt`: Important packages and libaries to run this application.
 
-`db.sqlite3`: The simple database for this application.
+`db.sqlite3`: The SQLite database for this application.
 
 In the `flashcards` sub-directory:
 
 `static/flashcards`: Contains static files for this application, including:
 - Media files (e.g. favicon)
-- Template CSV/Excel files for set creation
+- Template CSV/Excel files for set creation (`sample.csv` & `sample.xlsx`)
 - Front-end Javascript and CSS code (`script.js` & `styles.css`)
 
 `templates/flashcards`: Contains HTML templates for this application.
-
+- `layout.html`: HTML layout for other HTML files
+- `error.html`: Custom error messages
+- `login.html`: User log-in page
+- `register.html`: User registration page
+- `index.html`: Index page
+- `create.html`, `add-cards-csv.html`: Study set creation (manual & via file upload)
+- `set.html`, `study.html`, `test.html`: View, study, test the content of a set
+- `test.html`: Rendering test results
 
 ## How to run this application:
 1. In your terminal, `cd` to this directory
@@ -49,3 +58,7 @@ In the `flashcards` sub-directory:
 Possible improvements to the project:
 - Editing a user's account (e.g. edit username/password)
 - Storing test scores and user's actions/commitment
+
+Possible frameworks/technologies to integrate:
+- Docker & PostGres (back-end)
+- React (front-end)

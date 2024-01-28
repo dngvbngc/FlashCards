@@ -71,6 +71,9 @@ def add_cards_csv(request, set_id):
         return HttpResponseRedirect(reverse('error', args=(404,)))
     message = None
 
+    if request.user != set.owner:
+        return HttpResponseRedirect(reverse('error', args=(300,)))
+    
     if request.method == "POST":
         file = request.FILES.get("file")
         if file:
@@ -343,6 +346,8 @@ def error(request, error_code):
         message = "Page Not Found."
     if error_code == 400:
         message = "Log In Required."
+    if error_code == 300:
+        message = "Bad Request."
     return render(request, "flashcards/error.html", {
         "message": message
     })
