@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hintbtn) {
         hintbtn.onclick = function() {
             answer.value = "";
-            answer.placeholder = hint;
+            answer.placeholder = hint.value;
             prompt.innerHTML = "Enter the correct definition above."
             prompt.style.display = "block";
         }
