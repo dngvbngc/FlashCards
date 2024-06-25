@@ -1,4 +1,4 @@
-# FlashCards-WebAPI
+# FlashCards - Django & SQLite
 
 ## Distinctiveness and Complexity: 
 This web application is my capstone submission for **CS50’s Web Programming with Python and JavaScript**. Built using the **Django Web Framework**, **SQLite**, and **Bootstrap**, this is a FlashCards application for learners of memory-intensive subjects such as foreign languages. 
